@@ -2,6 +2,7 @@ package com.oracle.qa.dataload;
 
 import com.oracle.qa.dataload.config.ApplicationProperties;
 import com.oracle.qa.dataload.config.DefaultProfileUtil;
+import com.oracle.qa.dataload.service.executors.Runner;
 
 import io.github.jhipster.config.JHipsterConstants;
 
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
@@ -82,5 +84,10 @@ public class DataLoadApp {
             InetAddress.getLocalHost().getHostAddress(),
             env.getProperty("server.port"),
             env.getActiveProfiles());
+    }
+    
+    @Bean
+    public Runner runner() {
+        return new Runner();
     }
 }
