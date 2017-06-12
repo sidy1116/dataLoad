@@ -1,0 +1,54 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "siteId",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "phints",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "referelUrl",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "headers",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "idType",
+            "fieldType": "IdType",
+            "fieldValues": "bkuuid,adid,idfa,e_id_m,e_id_s,p_id_m,p_id_s",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "requestCount",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "file",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "createDate",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20170612135939",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "tag_request",
+    "pagination": "infinite-scroll"
+}
