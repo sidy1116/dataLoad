@@ -1,13 +1,10 @@
 package com.oracle.qa.dataload.service.executors;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +20,16 @@ public class Runner  {
 	@Autowired
 	 private  TagRequestService tagRequestService;
 	
+	@Autowired
+	private Executor taskExecutor;
+	
 	@Async
 	public  void useCompletableFutureWithExecutor(List<TagCallTask> tasks,TagRequestDTO tagRequestDTO) throws IOException  {
 		  long start = System.nanoTime();
 		  
 		  List<CompletableFuture<String>> futures =
 		      tasks.stream()
-		           .map(t -> CompletableFuture.supplyAsync(() -> t.makeTagCalls()))
+		           .map(t -> CompletableFuture.supplyAsync(() -> t.makeTagCalls(),taskExecutor))
 		           .collect(Collectors.toList());
 		 
 		  List<String> result =
@@ -38,7 +38,6 @@ public class Runner  {
 		             .collect(Collectors.toList());
 		  long duration = (System.nanoTime() - start) / 1_000_000;
 		  System.out.printf("Processed %d tasks in %d millis\n", tasks.size(), duration);
-		  System.out.println(result);
 		  
 		  ByteArrayOutputStream btOs = new ByteArrayOutputStream();
 		  String nl = System.getProperty("line.separator");
