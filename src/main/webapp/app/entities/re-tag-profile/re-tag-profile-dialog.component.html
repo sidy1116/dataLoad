@@ -1,0 +1,84 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myReTagProfileLabel">Create or edit a Re Tag Profile</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!reTagProfile.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="reTagProfile.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_siteId">Site Id</label>
+            <input type="number" class="form-control" name="siteId" id="field_siteId"
+                [(ngModel)]="reTagProfile.siteId" required />
+            <div [hidden]="!(editForm.controls.siteId?.dirty && editForm.controls.siteId?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.siteId?.errors?.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.siteId?.errors?.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_inputFile">Input File</label>
+            <div>
+                <div *ngIf="reTagProfile.inputFile" class="form-text text-danger clearfix">
+                    <a class="pull-left" (click)="openFile(reTagProfile.inputFileContentType, reTagProfile.inputFile)">open</a><br>
+                    <span class="pull-left">{{reTagProfile.inputFileContentType}}, {{byteSize(reTagProfile.inputFile)}}</span>
+                    <button type="button" (click)="reTagProfile.inputFile=null;reTagProfile.inputFileContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="fa fa-times"></span>
+                    </button>
+                </div>
+                <input type="file" (change)="setFileData($event, reTagProfile, 'inputFile', false)"/>
+            </div>
+            <input type="hidden" class="form-control" name="inputFile" id="field_inputFile"
+                [(ngModel)]="reTagProfile.inputFile" required />
+            <input type="hidden" class="form-control" name="inputFileContentType" id="field_inputFileContentType"
+                [(ngModel)]="reTagProfile.inputFileContentType" />
+            <div [hidden]="!(editForm.controls.inputFile?.dirty && editForm.controls.inputFile?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.inputFile?.errors?.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_phint">Phint</label>
+            <input type="text" class="form-control" name="phint" id="field_phint"
+                [(ngModel)]="reTagProfile.phint"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_headers">Headers</label>
+            <input type="text" class="form-control" name="headers" id="field_headers"
+                [(ngModel)]="reTagProfile.headers"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_createDate">Create Date</label>
+            <div class="input-group">
+                <input id="field_createDate" type="text" class="form-control" name="createDate" ngbDatepicker  #createDateDp="ngbDatepicker" [(ngModel)]="reTagProfile.createDate"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" (click)="createDateDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

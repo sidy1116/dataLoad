@@ -26,6 +26,11 @@ public class TagCallTask {
 	
 	String siteId;
 	String phint;
+	String headers;
+	
+
+
+
 	public TagCallTask(Integer siteId, String phint){
 		this.siteId=siteId.toString();
 		this.phint=phint;
@@ -68,7 +73,11 @@ public class TagCallTask {
 				.build();
 		factory.setHttpClient(httpClient);
 		RestTemplate restemplate2 = new RestTemplate(factory);
-		HttpHeaders headers = new HttpHeaders();
+		HttpHeaders headers2 = new HttpHeaders();
+		if(headers!=null){
+			headers2.add("Cookie", "bku="+headers);
+		}
+		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).toUri(), HttpMethod.GET, entity, String.class);
 		// System.out.println(response.getStatusCodeValue());
@@ -94,5 +103,18 @@ public class TagCallTask {
 	public void setSiteId(String siteId) {
 		this.siteId = siteId;
 	}
+
+	
+	public String getHeaders() {
+		return headers;
+	}
+
+
+
+
+	public void setHeaders(String headers) {
+		this.headers = headers;
+	}
+
 
 }

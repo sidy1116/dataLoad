@@ -11,14 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.oracle.qa.dataload.service.ReTagProfileService;
 import com.oracle.qa.dataload.service.TagRequestService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
+import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
 
 @Service
 public class Runner  {
 	@Autowired
 	 private  TagRequestService tagRequestService;
+	
+	@Autowired
+	 private  ReTagProfileService reTagProfileService;
 	
 	@Autowired
 	private Executor taskExecutor;
@@ -55,6 +60,25 @@ public class Runner  {
 	        
 		}
 		
+	
+	@Async
+	public  void useCompletableFutureWithExecutor(List<TagCallTask> tasks,ReTagProfileDTO tagRequestDTO) throws IOException  {
+		  long start = System.nanoTime();
+		  
+		  List<CompletableFuture<String>> futures =
+		      tasks.stream()
+		           .map(t -> CompletableFuture.supplyAsync(() -> t.makeTagCalls(),taskExecutor))
+		           .collect(Collectors.toList());
+		 
+		  List<String> result =
+		      futures.stream()
+		             .map(CompletableFuture::join)
+		             .collect(Collectors.toList());
+		  long duration = (System.nanoTime() - start) / 1_000_000;
+		  System.out.printf("Processed %d tasks in %d millis\n", tasks.size(), duration);
+		  System.out.println(result);
+		 
+		}
 	 
 	
 }
