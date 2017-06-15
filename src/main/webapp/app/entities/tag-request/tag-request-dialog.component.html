@@ -1,116 +1,166 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	#editForm="ngForm">
 
-    <div class="modal-header">
-        <h4 class="modal-title" id="myTagRequestLabel">Create or edit a Tag Request</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
-    </div>
-    <div class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!tagRequest.id">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="tagRequest.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_siteId">Site Id</label>
-            <input type="number" class="form-control" name="siteId" id="field_siteId"
-                [(ngModel)]="tagRequest.siteId" required />
-            <div [hidden]="!(editForm.controls.siteId?.dirty && editForm.controls.siteId?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.siteId?.errors?.required">
-                   This field is required.
-                </small>
-                <small class="form-text text-danger"
-                    [hidden]="!editForm.controls.siteId?.errors?.number">
-                    This field should be a number.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_phints">Phints</label>
-            <input type="text" class="form-control" name="phints" id="field_phints"
-                [(ngModel)]="tagRequest.phints"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_referelUrl">Referel Url</label>
-            <input type="text" class="form-control" name="referelUrl" id="field_referelUrl"
-                [(ngModel)]="tagRequest.referelUrl"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_headers">Headers</label>
-            <input type="text" class="form-control" name="headers" id="field_headers"
-                [(ngModel)]="tagRequest.headers"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_idType">Id Type</label>
-            <select class="form-control" name="idType" [(ngModel)]="tagRequest.idType" id="field_idType"  required>
-                <option value="bkuuid">bkuuid</option>
-                <option value="adid">adid</option>
-                <option value="idfa">idfa</option>
-                <option value="e_id_m">e_id_m</option>
-                <option value="e_id_s">e_id_s</option>
-                <option value="p_id_m">p_id_m</option>
-                <option value="p_id_s">p_id_s</option>
-            </select>
-            <div [hidden]="!(editForm.controls.idType?.dirty && editForm.controls.idType?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.idType?.errors?.required">
-                   This field is required.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_requestCount">Request Count</label>
-            <input type="number" class="form-control" name="requestCount" id="field_requestCount"
-                [(ngModel)]="tagRequest.requestCount" required />
-            <div [hidden]="!(editForm.controls.requestCount?.dirty && editForm.controls.requestCount?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.requestCount?.errors?.required">
-                   This field is required.
-                </small>
-                <small class="form-text text-danger"
-                    [hidden]="!editForm.controls.requestCount?.errors?.number">
-                    This field should be a number.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_file">File</label>
-            <div>
-                <div *ngIf="tagRequest.file" class="form-text text-danger clearfix">
-                    <a class="pull-left" (click)="openFile(tagRequest.fileContentType, tagRequest.file)">open</a><br>
-                    <span class="pull-left">{{tagRequest.fileContentType}}, {{byteSize(tagRequest.file)}}</span>
-                    <button type="button" (click)="tagRequest.file=null;tagRequest.fileContentType=null;"
-                            class="btn btn-default btn-xs pull-right">
-                        <span class="fa fa-times"></span>
-                    </button>
-                </div>
-                <input type="file" (change)="setFileData($event, tagRequest, 'file', false)"/>
-            </div>
-            <input type="hidden" class="form-control" name="file" id="field_file"
-                [(ngModel)]="tagRequest.file"  />
-            <input type="hidden" class="form-control" name="fileContentType" id="field_fileContentType"
-                [(ngModel)]="tagRequest.fileContentType" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_createDate">Create Date</label>
-            <div class="input-group">
-                <input id="field_createDate" type="text" class="form-control" name="createDate" ngbDatepicker  #createDateDp="ngbDatepicker" [(ngModel)]="tagRequest.createDate"
-                />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" (click)="createDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
+	<div class="modal-header">
+		<h4 class="modal-title" id="myTagRequestLabel">Create or edit a
+			Tag Request</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div class="modal-body">
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" [hidden]="!tagRequest.id">
+			<label for="id">ID</label> <input type="text" class="form-control"
+				id="id" name="id" [(ngModel)]="tagRequest.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label" for="field_siteId">Site Id</label>
+			<input type="number" class="form-control" name="siteId"
+				id="field_siteId" [(ngModel)]="tagRequest.siteId" required />
+			<div
+				[hidden]="!(editForm.controls.siteId?.dirty && editForm.controls.siteId?.invalid)">
+				<small class="form-text text-danger"
+					[hidden]="!editForm.controls.siteId?.errors?.required">
+					This field is required. </small> <small class="form-text text-danger"
+					[hidden]="!editForm.controls.siteId?.errors?.number"> This
+					field should be a number. </small>
+			</div>
+		</div>
 
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
-        </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
-        </button>
-    </div>
+		<div>
+
+			<label class="form-control-label" for="field_phints">Phints</label>        
+			<div *ngFor="let phintRow of phintRows; let i=index">
+				<br> <span class="pull-left"> {{phintRow}} </span>            
+				<button type="button" class="btn btn-danger btn-sm pull-right"
+					(click)="deleteRow(i)">  Remove</button>
+			</div>
+			<br>
+			<div class="form-group">
+				       <input type="text" #phintRow
+					placeholder="phintkey=phintValue"> 
+				<button type="button" class="btn btn-primary btn-sm "
+					(click)="addRow(phintRow.value)">  Add Phint</button>
+				   
+			</div>
+
+		</div>
+
+
+
+		<div class="form-group">
+			<label class="form-control-label" for="field_referelUrl">Referel
+				Url</label> <input type="text" class="form-control" name="referelUrl"
+				id="field_referelUrl" [(ngModel)]="tagRequest.referelUrl" />
+		</div>
+
+		<div>
+
+			<label class="form-control-label" for="field_headers">Headers</label>
+
+			<div *ngFor="let headerRow of headerRows let i=index">
+				<br>
+
+				<div class="row">
+					&nbsp; &nbsp; &nbsp; &nbsp;
+					<div class="col-sm-2 box">{{headerRow.key}}</div>
+					&nbsp; &nbsp;: &nbsp; &nbsp;
+					<div class="col-sm-8 box">{{headerRow.value}}
+					<button type="button" class="btn btn-danger btn-sm pull-right"
+						(click)="deleteHeaderRow(i)">  Remove</button></div>
+				</div>
+			</div>
+			<br>
+			<div class="row ">
+				<div class="col-xs-2 box">
+					<div class="form-group">
+						       <input type="text" #headerRowKey placeholder="Header Key"> 
+					</div>
+				</div>
+				<div class="col-xs-2 ">
+					<div class="form-group">
+						       <input type="text" #headerRowValue
+							placeholder="Header Value">
+					</div>
+				</div>
+				<div class="col-xs-2 box">
+					<button type="button" class="btn btn-primary btn-sm"
+						(click)="addHeaderRow(headerRowKey.value, headerRowValue.value)">
+						 Add Header</button>
+					   
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<div class="form-group">
+			<label class="form-control-label" for="field_idType">Id Type</label>
+			<select class="form-control" name="idType"
+				[(ngModel)]="tagRequest.idType" id="field_idType" required>
+				<option value="bkuuid">bkuuid</option>
+				<option value="adid">adid</option>
+				<option value="idfa">idfa</option>
+				<option value="e_id_m">e_id_m</option>
+				<option value="e_id_s">e_id_s</option>
+				<option value="p_id_m">p_id_m</option>
+				<option value="p_id_s">p_id_s</option>
+			</select>
+			<div
+				[hidden]="!(editForm.controls.idType?.dirty && editForm.controls.idType?.invalid)">
+				<small class="form-text text-danger"
+					[hidden]="!editForm.controls.idType?.errors?.required">
+					This field is required. </small>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label" for="field_requestCount">Request
+				Count</label> <input type="number" class="form-control" name="requestCount"
+				id="field_requestCount" [(ngModel)]="tagRequest.requestCount"
+				required />
+			<div
+				[hidden]="!(editForm.controls.requestCount?.dirty && editForm.controls.requestCount?.invalid)">
+				<small class="form-text text-danger"
+					[hidden]="!editForm.controls.requestCount?.errors?.required">
+					This field is required. </small> <small class="form-text text-danger"
+					[hidden]="!editForm.controls.requestCount?.errors?.number">
+					This field should be a number. </small>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label" for="field_file">File</label>
+			<div>
+				<div *ngIf="tagRequest.file" class="form-text text-danger clearfix">
+					<a class="pull-left"
+						(click)="openFile(tagRequest.fileContentType, tagRequest.file)">open</a><br>
+					<span class="pull-left">{{tagRequest.fileContentType}},
+						{{byteSize(tagRequest.file)}}</span>
+					<button type="button"
+						(click)="tagRequest.file=null;tagRequest.fileContentType=null;"
+						class="btn btn-default btn-xs pull-right">
+						<span class="fa fa-times"></span>
+					</button>
+				</div>
+				<input type="file"
+					(change)="setFileData($event, tagRequest, 'file', false)" />
+			</div>
+			<input type="hidden" class="form-control" name="file" id="field_file"
+				[(ngModel)]="tagRequest.file" /> <input type="hidden"
+				class="form-control" name="fileContentType"
+				id="field_fileContentType" [(ngModel)]="tagRequest.fileContentType" />
+		</div>
+
+
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal"
+			(click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+		</button>
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			class="btn btn-primary">
+			<span class="fa fa-save"></span>&nbsp;<span>Save</span>
+		</button>
+	</div>
 </form>

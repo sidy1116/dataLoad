@@ -3,6 +3,7 @@ package com.oracle.qa.dataload.service.async.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.oracle.qa.dataload.service.async.AsyncUtil;
+import com.oracle.qa.dataload.web.rest.util.RESTUtils;
 
 public class TagCallTask {
 	private String url="http://tags.bluekai.com/site/{siteId}";
@@ -31,22 +33,28 @@ public class TagCallTask {
 
 
 
-	public TagCallTask(Integer siteId, String phint){
+	public TagCallTask(Integer siteId, String phint,String headers){
 		this.siteId=siteId.toString();
 		this.phint=phint;
+		this.headers=headers;
 	}
 
 
 
 
 	public String makeTagCalls() {
-		int i = 0;
 		String bkuid = "";
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("phint", phint);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+		if(phint!=null){
+			String [] phints=phint.split("\\|\\|");
+			for(String temp:phints){
+				builder.queryParam("phint", temp);
+			}
+		}
 		Map<String, String> uriParams = new HashMap<String, String>();
 		uriParams.put("siteId", siteId);
 		
-
+		
 		
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
@@ -56,31 +64,36 @@ public class TagCallTask {
 			public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)
 					throws ProtocolException {
 
-				// System.out.println(response);
-
-				// If redirect intercept intermediate response.
 				if (super.isRedirected(request, response, context)) {
 					int statusCode = response.getStatusLine().getStatusCode();
 					String redirectURL = response.getFirstHeader("Location").getValue();
-					// System.out.println("RedirectURL: " + redirectURL);
 
 					return true;
 				}
 				return false;
 			}
 		})
+				//.setProxy(new HttpHost("www-proxy.us.oracle.com", 80))
 
 				.build();
 		factory.setHttpClient(httpClient);
 		RestTemplate restemplate2 = new RestTemplate(factory);
 		HttpHeaders headers2 = new HttpHeaders();
 		if(headers!=null){
-			headers2.add("Cookie", "bku="+headers);
+			String[] headersList=headers.split("\\|\\|");
+			for(String headerTemp:headersList){
+				String[] keyValue=headerTemp.split(":");
+				headers2.add(keyValue[0], keyValue[1]);
+				
+			}
+			
+			
+			
 		}
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		HttpEntity<?> entity = new HttpEntity<>(headers2);
 		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).toUri(), HttpMethod.GET, entity, String.class);
-		// System.out.println(response.getStatusCodeValue());
+		
 		if (HttpStatus.OK == response.getStatusCode()) {
 			 System.out.println(AsyncUtil.getThreadName());
 			

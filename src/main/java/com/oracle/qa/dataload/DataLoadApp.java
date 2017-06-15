@@ -1,15 +1,17 @@
 package com.oracle.qa.dataload;
 
-import com.oracle.qa.dataload.config.ApplicationProperties;
-import com.oracle.qa.dataload.config.DefaultProfileUtil;
-import com.oracle.qa.dataload.service.executors.Runner;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
 
-import io.github.jhipster.config.JHipsterConstants;
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.*;
+import org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,11 +20,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
+import com.oracle.qa.dataload.config.ApplicationProperties;
+import com.oracle.qa.dataload.config.DefaultProfileUtil;
+import com.oracle.qa.dataload.service.executors.Runner;
+import com.oracle.qa.dataload.web.rest.util.RESTUtils;
+
+import io.github.jhipster.config.JHipsterConstants;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
@@ -90,4 +93,9 @@ public class DataLoadApp {
     public Runner runner() {
         return new Runner();
     }
+    @Bean
+    public RESTUtils restUtils() {
+        return new RESTUtils();
+    }
+    
 }

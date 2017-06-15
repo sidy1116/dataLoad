@@ -32,9 +32,9 @@ public class AsyncConfiguration implements AsyncConfigurer {
     public Executor getAsyncExecutor() {
         log.debug("Creating Async Task Executor");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(100);
-        executor.setMaxPoolSize(300);
-        executor.setQueueCapacity(10000000);
+        executor.setCorePoolSize(jHipsterProperties.getAsync().getCorePoolSize());
+        executor.setMaxPoolSize(jHipsterProperties.getAsync().getMaxPoolSize());
+        executor.setQueueCapacity(jHipsterProperties.getAsync().getQueueCapacity());
         executor.setThreadNamePrefix("data-load-Executor-");
         return new ExceptionHandlingAsyncTaskExecutor(executor);
     }

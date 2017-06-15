@@ -3,12 +3,14 @@ package com.oracle.qa.dataload.web.rest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.hibernate.service.spi.InjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.oracle.qa.dataload.service.TagRequestService;
+import com.oracle.qa.dataload.service.UserService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
 import com.oracle.qa.dataload.service.executors.Runner;
@@ -56,9 +59,8 @@ public class TagRequestResource {
     
     @Autowired
 	Runner runner;
-    
-    
-
+   
+  
     public TagRequestResource(TagRequestService tagRequestService) {
         this.tagRequestService = tagRequestService;
     }
@@ -78,6 +80,7 @@ public class TagRequestResource {
         if (tagRequestDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tagRequest cannot already have an ID")).body(null);
         }
+        tagRequestDTO.setCreateDate(LocalDate.now());
         TagRequestDTO result = tagRequestService.save(tagRequestDTO);
         /**
          * code for Aysnc
@@ -86,7 +89,7 @@ public class TagRequestResource {
 
         ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for (int i=0;i<tagRequestDTO.getRequestCount();i++){
-        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints()));
+        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders()));
         }
         runner.useCompletableFutureWithExecutor(tagCallArrayList,result);
         /**
@@ -121,7 +124,7 @@ public class TagRequestResource {
          */
         ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for (int i=0;i<tagRequestDTO.getRequestCount();i++){
-        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints()));
+        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders()));
         }
         runner.useCompletableFutureWithExecutor(tagCallArrayList, result);
         /**

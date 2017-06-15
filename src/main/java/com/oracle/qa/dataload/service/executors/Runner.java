@@ -54,6 +54,7 @@ public class Runner  {
 	            }
 	        } finally {
 	        	 tagRequestDTO.setFile(btOs.toByteArray());
+	        	 tagRequestDTO.setFileContentType("text/plain");
 	 	        tagRequestService.save(tagRequestDTO);
 	        }
 	       

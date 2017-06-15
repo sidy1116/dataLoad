@@ -20,7 +20,9 @@ export class ReTagProfileDialogComponent implements OnInit {
     authorities: any[];
     isSaving: boolean;
     createDateDp: any;
-
+    phintRows = [];
+    headerRows = [];
+    
     constructor(
         public activeModal: NgbActiveModal,
         private dataUtils: DataUtils,
@@ -34,7 +36,23 @@ export class ReTagProfileDialogComponent implements OnInit {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
     }
-
+    addRow( phintRow: string ) {
+        this.phintRows.push( phintRow );
+       
+    }
+    deleteRow( i: number ) {
+        this.phintRows.splice( i, 1 );
+    }
+    
+    addHeaderRow( key1: string ,value1:string ) {
+        var tempmap={key:key1,value:value1};
+        this.headerRows.push( tempmap );
+       
+    }
+    deleteHeaderRow( i: number ) {
+        this.headerRows.splice( i, 1 );
+    }
+    
     byteSize(field) {
         return this.dataUtils.byteSize(field);
     }
@@ -66,6 +84,30 @@ export class ReTagProfileDialogComponent implements OnInit {
             this.subscribeToSaveResponse(
                 this.reTagProfileService.update(this.reTagProfile), false);
         } else {
+            this.reTagProfile.phint='';
+            for (var i = 0; i < this.phintRows.length; i++) {
+                if(i==0) {
+                   
+                    this.reTagProfile.phint=this.reTagProfile.phint+this.phintRows[i];
+                }else{
+                    this.reTagProfile.phint=this.reTagProfile.phint+'||'+this.phintRows[i];
+                }
+              
+            }
+            
+            for (var header = 0; header < this.headerRows.length; header++) {
+                if(header==0) {
+                   
+                    this.reTagProfile.headers=this.reTagProfile.headers+this.headerRows[header].key+':'+this.headerRows[header].value;
+                }else{
+                    this.reTagProfile.headers=this.reTagProfile.headers+'||'+this.headerRows[header].key+':'+this.headerRows[header].value;
+                }
+              
+            }
+            console.log("reTagProfile ",  this.reTagProfile);
+            this.phintRows = []; 
+            this.headerRows = [];
+            
             this.subscribeToSaveResponse(
                 this.reTagProfileService.create(this.reTagProfile), true);
         }

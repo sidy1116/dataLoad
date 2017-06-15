@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,13 +74,19 @@ public class ReTagProfileResource {
         if (reTagProfileDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new reTagProfile cannot already have an ID")).body(null);
         }
+        
+        reTagProfileDTO.setCreateDate(LocalDate.now());
+
         ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
         String[] inputFile = new String(reTagProfileDTO.getInputFile(), StandardCharsets.UTF_8).split("\n");
         
         ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for(String retag:inputFile){
-        	TagCallTask  tagcalltask=new TagCallTask(reTagProfileDTO.getSiteId(),reTagProfileDTO.getPhint());
-        	tagcalltask.setHeaders(retag);
+        	String completeHeader="";
+        	if(reTagProfileDTO.getHeaders()!=null){
+        		completeHeader="Cookie:bku="+retag+"||"+reTagProfileDTO.getHeaders();
+        	}else completeHeader="Cookie:bku="+retag;
+        	TagCallTask  tagcalltask=new TagCallTask(reTagProfileDTO.getSiteId(),reTagProfileDTO.getPhint(),completeHeader);
         	tagCallArrayList.add(tagcalltask);
         }
         

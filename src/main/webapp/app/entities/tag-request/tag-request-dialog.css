@@ -1,0 +1,8 @@
+.top-margin{ margin-top:10px; }
+
+.box {
+    padding: 0 7px 0 7px;
+}
+.box .inner {
+    background-color: #fff;
+}
