@@ -10,10 +10,10 @@ import { ReTagProfile } from './re-tag-profile.model';
 import { ReTagProfilePopupService } from './re-tag-profile-popup.service';
 import { ReTagProfileService } from './re-tag-profile.service';
 
-@Component({
+@Component( {
     selector: 'jhi-re-tag-profile-dialog',
     templateUrl: './re-tag-profile-dialog.component.html'
-})
+} )
 export class ReTagProfileDialogComponent implements OnInit {
 
     reTagProfile: ReTagProfile;
@@ -22,7 +22,7 @@ export class ReTagProfileDialogComponent implements OnInit {
     createDateDp: any;
     phintRows = [];
     headerRows = [];
-    
+
     constructor(
         public activeModal: NgbActiveModal,
         private dataUtils: DataUtils,
@@ -36,54 +36,57 @@ export class ReTagProfileDialogComponent implements OnInit {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
     }
+
     addRow( phintRow: string ) {
         this.phintRows.push( phintRow );
-       
+
     }
     deleteRow( i: number ) {
         this.phintRows.splice( i, 1 );
     }
-    
-    addHeaderRow( key1: string ,value1:string ) {
-        var tempmap={key:key1,value:value1};
+
+    addHeaderRow( key1: string, value1: string ) {
+        var tempmap = { key: key1, value: value1 };
         this.headerRows.push( tempmap );
-       
+
     }
     deleteHeaderRow( i: number ) {
         this.headerRows.splice( i, 1 );
     }
-    
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
+
+
+    byteSize( field ) {
+        return this.dataUtils.byteSize( field );
     }
 
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
+    openFile( contentType, field ) {
+        return this.dataUtils.openFile( contentType, field );
     }
 
-    setFileData(event, reTagProfile, field, isImage) {
-        if (event && event.target.files && event.target.files[0]) {
+    setFileData( event, reTagProfile, field, isImage ) {
+        if ( event && event.target.files && event.target.files[0] ) {
             const file = event.target.files[0];
-            if (isImage && !/^image\//.test(file.type)) {
+            if ( isImage && !/^image\//.test( file.type ) ) {
                 return;
             }
-            this.dataUtils.toBase64(file, (base64Data) => {
+            this.dataUtils.toBase64( file, ( base64Data ) => {
                 reTagProfile[field] = base64Data;
                 reTagProfile[`${field}ContentType`] = file.type;
-            });
+            } );
         }
     }
 
     clear() {
-        this.activeModal.dismiss('cancel');
+        this.activeModal.dismiss( 'cancel' );
     }
 
     save() {
         this.isSaving = true;
-        if (this.reTagProfile.id !== undefined) {
+        if ( this.reTagProfile.id !== undefined ) {
             this.subscribeToSaveResponse(
-                this.reTagProfileService.update(this.reTagProfile), false);
+                this.reTagProfileService.update( this.reTagProfile ), false );
         } else {
+            
             this.reTagProfile.phint='';
             for (var i = 0; i < this.phintRows.length; i++) {
                 if(i==0) {
@@ -108,46 +111,47 @@ export class ReTagProfileDialogComponent implements OnInit {
             this.phintRows = []; 
             this.headerRows = [];
             
+            
             this.subscribeToSaveResponse(
-                this.reTagProfileService.create(this.reTagProfile), true);
+                this.reTagProfileService.create( this.reTagProfile ), true );
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<ReTagProfile>, isCreated: boolean) {
-        result.subscribe((res: ReTagProfile) =>
-            this.onSaveSuccess(res, isCreated), (res: Response) => this.onSaveError(res));
+    private subscribeToSaveResponse( result: Observable<ReTagProfile>, isCreated: boolean ) {
+        result.subscribe(( res: ReTagProfile ) =>
+            this.onSaveSuccess( res, isCreated ), ( res: Response ) => this.onSaveError( res ) );
     }
 
-    private onSaveSuccess(result: ReTagProfile, isCreated: boolean) {
+    private onSaveSuccess( result: ReTagProfile, isCreated: boolean ) {
         this.alertService.success(
             isCreated ? `A new Re Tag Profile is created with identifier ${result.id}`
-            : `A Re Tag Profile is updated with identifier ${result.id}`,
-            null, null);
+                : `A Re Tag Profile is updated with identifier ${result.id}`,
+            null, null );
 
-        this.eventManager.broadcast({ name: 'reTagProfileListModification', content: 'OK'});
+        this.eventManager.broadcast( { name: 'reTagProfileListModification', content: 'OK' } );
         this.isSaving = false;
-        this.activeModal.dismiss(result);
+        this.activeModal.dismiss( result );
     }
 
-    private onSaveError(error) {
+    private onSaveError( error ) {
         try {
             error.json();
-        } catch (exception) {
+        } catch ( exception ) {
             error.message = error.text();
         }
         this.isSaving = false;
-        this.onError(error);
+        this.onError( error );
     }
 
-    private onError(error) {
-        this.alertService.error(error.message, null, null);
+    private onError( error ) {
+        this.alertService.error( error.message, null, null );
     }
 }
 
-@Component({
+@Component( {
     selector: 'jhi-re-tag-profile-popup',
     template: ''
-})
+} )
 export class ReTagProfilePopupComponent implements OnInit, OnDestroy {
 
     modalRef: NgbModalRef;
@@ -156,18 +160,18 @@ export class ReTagProfilePopupComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private reTagProfilePopupService: ReTagProfilePopupService
-    ) {}
+    ) { }
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
+        this.routeSub = this.route.params.subscribe(( params ) => {
             if ( params['id'] ) {
                 this.modalRef = this.reTagProfilePopupService
-                    .open(ReTagProfileDialogComponent, params['id']);
+                    .open( ReTagProfileDialogComponent, params['id'] );
             } else {
                 this.modalRef = this.reTagProfilePopupService
-                    .open(ReTagProfileDialogComponent);
+                    .open( ReTagProfileDialogComponent );
             }
-        });
+        } );
     }
 
     ngOnDestroy() {

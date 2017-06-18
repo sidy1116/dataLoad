@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
     value = "org.mapstruct.ap.MappingProcessor",
 
-    date = "2017-06-15T01:27:40+0530",
+    date = "2017-06-15T21:07:27+0530",
 
     comments = "version: 1.1.0.Final, compiler: Eclipse JDT (IDE) 3.12.3.v20170228-1205, environment: Java 1.8.0_91 (Oracle Corporation)"
 
@@ -58,6 +58,10 @@ public class ReTagProfileMapperImpl implements ReTagProfileMapper {
 
         reTagProfile.setCreateDate( dto.getCreateDate() );
 
+        reTagProfile.setStartFromLine( dto.getStartFromLine() );
+
+        reTagProfile.setToLine( dto.getToLine() );
+
         return reTagProfile;
     }
 
@@ -90,6 +94,10 @@ public class ReTagProfileMapperImpl implements ReTagProfileMapper {
         reTagProfileDTO.setHeaders( entity.getHeaders() );
 
         reTagProfileDTO.setCreateDate( entity.getCreateDate() );
+
+        reTagProfileDTO.setStartFromLine( entity.getStartFromLine() );
+
+        reTagProfileDTO.setToLine( entity.getToLine() );
 
         return reTagProfileDTO;
     }

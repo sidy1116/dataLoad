@@ -28,6 +28,10 @@ public class ReTagProfileDTO implements Serializable {
 
     private LocalDate createDate;
 
+    private Integer startFromLine;
+
+    private Integer toLine;
+
     public Long getId() {
         return id;
     }
@@ -84,6 +88,22 @@ public class ReTagProfileDTO implements Serializable {
         this.createDate = createDate;
     }
 
+    public Integer getStartFromLine() {
+        return startFromLine;
+    }
+
+    public void setStartFromLine(Integer startFromLine) {
+        this.startFromLine = startFromLine;
+    }
+
+    public Integer getToLine() {
+        return toLine;
+    }
+
+    public void setToLine(Integer toLine) {
+        this.toLine = toLine;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -114,6 +134,8 @@ public class ReTagProfileDTO implements Serializable {
             ", phint='" + getPhint() + "'" +
             ", headers='" + getHeaders() + "'" +
             ", createDate='" + getCreateDate() + "'" +
+            ", startFromLine='" + getStartFromLine() + "'" +
+            ", toLine='" + getToLine() + "'" +
             "}";
     }
 }

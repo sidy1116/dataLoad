@@ -44,6 +44,12 @@ public class ReTagProfile implements Serializable {
     @Column(name = "create_date")
     private LocalDate createDate;
 
+    @Column(name = "start_from_line")
+    private Integer startFromLine;
+
+    @Column(name = "to_line")
+    private Integer toLine;
+
     public Long getId() {
         return id;
     }
@@ -130,6 +136,32 @@ public class ReTagProfile implements Serializable {
         this.createDate = createDate;
     }
 
+    public Integer getStartFromLine() {
+        return startFromLine;
+    }
+
+    public ReTagProfile startFromLine(Integer startFromLine) {
+        this.startFromLine = startFromLine;
+        return this;
+    }
+
+    public void setStartFromLine(Integer startFromLine) {
+        this.startFromLine = startFromLine;
+    }
+
+    public Integer getToLine() {
+        return toLine;
+    }
+
+    public ReTagProfile toLine(Integer toLine) {
+        this.toLine = toLine;
+        return this;
+    }
+
+    public void setToLine(Integer toLine) {
+        this.toLine = toLine;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -160,6 +192,8 @@ public class ReTagProfile implements Serializable {
             ", phint='" + getPhint() + "'" +
             ", headers='" + getHeaders() + "'" +
             ", createDate='" + getCreateDate() + "'" +
+            ", startFromLine='" + getStartFromLine() + "'" +
+            ", toLine='" + getToLine() + "'" +
             "}";
     }
 }

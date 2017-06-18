@@ -46,124 +46,153 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api")
 public class ReTagProfileResource {
 
-    private final Logger log = LoggerFactory.getLogger(ReTagProfileResource.class);
+	private final Logger log = LoggerFactory.getLogger(ReTagProfileResource.class);
 
-    private static final String ENTITY_NAME = "reTagProfile";
-    
-    @Autowired
-   	Runner runner;
-       
+	private static final String ENTITY_NAME = "reTagProfile";
 
-    private final ReTagProfileService reTagProfileService;
+	private final ReTagProfileService reTagProfileService;
+	@Autowired
+	Runner runner;
 
-    public ReTagProfileResource(ReTagProfileService reTagProfileService) {
-        this.reTagProfileService = reTagProfileService;
-    }
+	public ReTagProfileResource(ReTagProfileService reTagProfileService) {
+		this.reTagProfileService = reTagProfileService;
+	}
 
-    /**
-     * POST  /re-tag-profiles : Create a new reTagProfile.
-     *
-     * @param reTagProfileDTO the reTagProfileDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new reTagProfileDTO, or with status 400 (Bad Request) if the reTagProfile has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/re-tag-profiles")
-    @Timed
-    public ResponseEntity<ReTagProfileDTO> createReTagProfile(@Valid @RequestBody ReTagProfileDTO reTagProfileDTO) throws URISyntaxException {
-        log.debug("REST request to save ReTagProfile : {}", reTagProfileDTO);
-        if (reTagProfileDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new reTagProfile cannot already have an ID")).body(null);
-        }
-        
-        reTagProfileDTO.setCreateDate(LocalDate.now());
+	/**
+	 * POST /re-tag-profiles : Create a new reTagProfile.
+	 *
+	 * @param reTagProfileDTO
+	 *            the reTagProfileDTO to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the
+	 *         new reTagProfileDTO, or with status 400 (Bad Request) if the
+	 *         reTagProfile has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/re-tag-profiles")
+	@Timed
+	public ResponseEntity<ReTagProfileDTO> createReTagProfile(@Valid @RequestBody ReTagProfileDTO reTagProfileDTO)
+			throws URISyntaxException {
 
-        ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
-        String[] inputFile = new String(reTagProfileDTO.getInputFile(), StandardCharsets.UTF_8).split("\n");
-        
-        ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
-        for(String retag:inputFile){
-        	String completeHeader="";
-        	if(reTagProfileDTO.getHeaders()!=null){
-        		completeHeader="Cookie:bku="+retag+"||"+reTagProfileDTO.getHeaders();
-        	}else completeHeader="Cookie:bku="+retag;
-        	TagCallTask  tagcalltask=new TagCallTask(reTagProfileDTO.getSiteId(),reTagProfileDTO.getPhint(),completeHeader);
-        	tagCallArrayList.add(tagcalltask);
-        }
-        
-        try {
-			runner.useCompletableFutureWithExecutor(tagCallArrayList,result);
+		log.debug("REST request to save ReTagProfile : {}", reTagProfileDTO);
+
+		if (reTagProfileDTO.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
+					"A new reTagProfile cannot already have an ID")).body(null);
+		}
+
+		reTagProfileDTO.setCreateDate(LocalDate.now());
+
+		String[] inputFile = new String(reTagProfileDTO.getInputFile(), StandardCharsets.UTF_8).split("\n");
+
+		ArrayList<TagCallTask> tagCallArrayList = new ArrayList<TagCallTask>();
+		if (reTagProfileDTO.getStartFromLine() == null)
+			reTagProfileDTO.setStartFromLine(0);
+
+		if (reTagProfileDTO.getToLine() == null)
+			reTagProfileDTO.setToLine(inputFile.length);
+
+		 int from =reTagProfileDTO.getStartFromLine();
+		 int to=reTagProfileDTO.getToLine();
+		 
+		 if(from==1)from=0;
+		 
+		 for(int i=from;i<to;i++){
+			 String completeHeader = "";
+			 String retagbkuid=inputFile[i];
+				if (reTagProfileDTO.getHeaders() != null) {
+					completeHeader = "Cookie:bku=" + retagbkuid + "||" + reTagProfileDTO.getHeaders();
+				} else
+					completeHeader = "Cookie:bku=" + retagbkuid;
+				TagCallTask tagcalltask = new TagCallTask(reTagProfileDTO.getSiteId(), reTagProfileDTO.getPhint(),
+						completeHeader);
+				tagCallArrayList.add(tagcalltask);
+		 }
+
+		ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
+
+		try {
+			runner.useCompletableFutureWithExecutor(tagCallArrayList, result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        return ResponseEntity.created(new URI("/api/re-tag-profiles/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
 
-    /**
-     * PUT  /re-tag-profiles : Updates an existing reTagProfile.
-     *
-     * @param reTagProfileDTO the reTagProfileDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated reTagProfileDTO,
-     * or with status 400 (Bad Request) if the reTagProfileDTO is not valid,
-     * or with status 500 (Internal Server Error) if the reTagProfileDTO couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/re-tag-profiles")
-    @Timed
-    public ResponseEntity<ReTagProfileDTO> updateReTagProfile(@Valid @RequestBody ReTagProfileDTO reTagProfileDTO) throws URISyntaxException {
-        log.debug("REST request to update ReTagProfile : {}", reTagProfileDTO);
-        if (reTagProfileDTO.getId() == null) {
-            return createReTagProfile(reTagProfileDTO);
-        }
-        ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, reTagProfileDTO.getId().toString()))
-            .body(result);
-    }
+		return ResponseEntity.created(new URI("/api/re-tag-profiles/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
 
-    /**
-     * GET  /re-tag-profiles : get all the reTagProfiles.
-     *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of reTagProfiles in body
-     */
-    @GetMapping("/re-tag-profiles")
-    @Timed
-    public ResponseEntity<List<ReTagProfileDTO>> getAllReTagProfiles(@ApiParam Pageable pageable) {
-        log.debug("REST request to get a page of ReTagProfiles");
-        Page<ReTagProfileDTO> page = reTagProfileService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/re-tag-profiles");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+	/**
+	 * PUT /re-tag-profiles : Updates an existing reTagProfile.
+	 *
+	 * @param reTagProfileDTO
+	 *            the reTagProfileDTO to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         reTagProfileDTO, or with status 400 (Bad Request) if the
+	 *         reTagProfileDTO is not valid, or with status 500 (Internal Server
+	 *         Error) if the reTagProfileDTO couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/re-tag-profiles")
+	@Timed
+	public ResponseEntity<ReTagProfileDTO> updateReTagProfile(@Valid @RequestBody ReTagProfileDTO reTagProfileDTO)
+			throws URISyntaxException {
+		log.debug("REST request to update ReTagProfile : {}", reTagProfileDTO);
+		if (reTagProfileDTO.getId() == null) {
+			return createReTagProfile(reTagProfileDTO);
+		}
+		ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, reTagProfileDTO.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * GET  /re-tag-profiles/:id : get the "id" reTagProfile.
-     *
-     * @param id the id of the reTagProfileDTO to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the reTagProfileDTO, or with status 404 (Not Found)
-     */
-    @GetMapping("/re-tag-profiles/{id}")
-    @Timed
-    public ResponseEntity<ReTagProfileDTO> getReTagProfile(@PathVariable Long id) {
-        log.debug("REST request to get ReTagProfile : {}", id);
-        ReTagProfileDTO reTagProfileDTO = reTagProfileService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(reTagProfileDTO));
-    }
+	/**
+	 * GET /re-tag-profiles : get all the reTagProfiles.
+	 *
+	 * @param pageable
+	 *            the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and the list of
+	 *         reTagProfiles in body
+	 */
+	@GetMapping("/re-tag-profiles")
+	@Timed
+	public ResponseEntity<List<ReTagProfileDTO>> getAllReTagProfiles(@ApiParam Pageable pageable) {
+		log.debug("REST request to get a page of ReTagProfiles");
+		Page<ReTagProfileDTO> page = reTagProfileService.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/re-tag-profiles");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
 
-    /**
-     * DELETE  /re-tag-profiles/:id : delete the "id" reTagProfile.
-     *
-     * @param id the id of the reTagProfileDTO to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/re-tag-profiles/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteReTagProfile(@PathVariable Long id) {
-        log.debug("REST request to delete ReTagProfile : {}", id);
-        reTagProfileService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+	/**
+	 * GET /re-tag-profiles/:id : get the "id" reTagProfile.
+	 *
+	 * @param id
+	 *            the id of the reTagProfileDTO to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         reTagProfileDTO, or with status 404 (Not Found)
+	 */
+	@GetMapping("/re-tag-profiles/{id}")
+	@Timed
+	public ResponseEntity<ReTagProfileDTO> getReTagProfile(@PathVariable Long id) {
+		log.debug("REST request to get ReTagProfile : {}", id);
+		ReTagProfileDTO reTagProfileDTO = reTagProfileService.findOne(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(reTagProfileDTO));
+	}
+
+	/**
+	 * DELETE /re-tag-profiles/:id : delete the "id" reTagProfile.
+	 *
+	 * @param id
+	 *            the id of the reTagProfileDTO to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/re-tag-profiles/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteReTagProfile(@PathVariable Long id) {
+		log.debug("REST request to delete ReTagProfile : {}", id);
+		reTagProfileService.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
 }

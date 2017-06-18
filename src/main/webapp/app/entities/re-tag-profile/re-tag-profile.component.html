@@ -4,7 +4,7 @@
         <button class="btn btn-primary float-right create-re-tag-profile" [routerLink]="['/', { outlets: { popup: ['re-tag-profile-new'] } }]">
             <span class="fa fa-plus"></span>
             <span >
-            Create Re-Tag Profile Request
+            Create new Re Tag Profile
             </span>
         </button>
     </h2>
@@ -21,7 +21,10 @@
             <th jhiSortBy="inputFile"><span>Input File</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="phint"><span>Phint</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="headers"><span>Headers</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="startFromLine"><span>Start From Line</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="toLine"><span>To Line</span> <span class="fa fa-sort"></span></th>
+             <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
+            
             <th></th>
             </tr>
             </thead>
@@ -35,7 +38,10 @@
                 </td>
                 <td>{{reTagProfile.phint}}</td>
                 <td>{{reTagProfile.headers}}</td>
+                <td>{{reTagProfile.startFromLine}}</td>
+                <td>{{reTagProfile.toLine}}</td>
                 <td>{{reTagProfile.createDate | date:'mediumDate'}}</td>
+                
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

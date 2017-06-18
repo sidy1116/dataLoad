@@ -6,6 +6,8 @@ export class ReTagProfile {
         public phint?: string,
         public headers?: string,
         public createDate?: any,
+        public startFromLine?: number,
+        public toLine?: number,
     ) {
     }
 }

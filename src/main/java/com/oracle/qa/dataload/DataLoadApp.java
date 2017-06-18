@@ -23,7 +23,6 @@ import org.springframework.core.env.Environment;
 import com.oracle.qa.dataload.config.ApplicationProperties;
 import com.oracle.qa.dataload.config.DefaultProfileUtil;
 import com.oracle.qa.dataload.service.executors.Runner;
-import com.oracle.qa.dataload.web.rest.util.RESTUtils;
 
 import io.github.jhipster.config.JHipsterConstants;
 
@@ -93,9 +92,6 @@ public class DataLoadApp {
     public Runner runner() {
         return new Runner();
     }
-    @Bean
-    public RESTUtils restUtils() {
-        return new RESTUtils();
-    }
+   
     
 }

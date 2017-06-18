@@ -28,6 +28,14 @@
         {
             "fieldName": "createDate",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "startFromLine",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "toLine",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20170612210248",

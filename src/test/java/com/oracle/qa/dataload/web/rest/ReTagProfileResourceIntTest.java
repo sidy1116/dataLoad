@@ -60,6 +60,12 @@ public class ReTagProfileResourceIntTest {
     private static final LocalDate DEFAULT_CREATE_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATE_DATE = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Integer DEFAULT_START_FROM_LINE = 1;
+    private static final Integer UPDATED_START_FROM_LINE = 2;
+
+    private static final Integer DEFAULT_TO_LINE = 1;
+    private static final Integer UPDATED_TO_LINE = 2;
+
     @Autowired
     private ReTagProfileRepository reTagProfileRepository;
 
@@ -108,7 +114,9 @@ public class ReTagProfileResourceIntTest {
             .inputFileContentType(DEFAULT_INPUT_FILE_CONTENT_TYPE)
             .phint(DEFAULT_PHINT)
             .headers(DEFAULT_HEADERS)
-            .createDate(DEFAULT_CREATE_DATE);
+            .createDate(DEFAULT_CREATE_DATE)
+            .startFromLine(DEFAULT_START_FROM_LINE)
+            .toLine(DEFAULT_TO_LINE);
         return reTagProfile;
     }
 
@@ -139,6 +147,8 @@ public class ReTagProfileResourceIntTest {
         assertThat(testReTagProfile.getPhint()).isEqualTo(DEFAULT_PHINT);
         assertThat(testReTagProfile.getHeaders()).isEqualTo(DEFAULT_HEADERS);
         assertThat(testReTagProfile.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(testReTagProfile.getStartFromLine()).isEqualTo(DEFAULT_START_FROM_LINE);
+        assertThat(testReTagProfile.getToLine()).isEqualTo(DEFAULT_TO_LINE);
     }
 
     @Test
@@ -215,7 +225,9 @@ public class ReTagProfileResourceIntTest {
             .andExpect(jsonPath("$.[*].inputFile").value(hasItem(Base64Utils.encodeToString(DEFAULT_INPUT_FILE))))
             .andExpect(jsonPath("$.[*].phint").value(hasItem(DEFAULT_PHINT.toString())))
             .andExpect(jsonPath("$.[*].headers").value(hasItem(DEFAULT_HEADERS.toString())))
-            .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
+            .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())))
+            .andExpect(jsonPath("$.[*].startFromLine").value(hasItem(DEFAULT_START_FROM_LINE)))
+            .andExpect(jsonPath("$.[*].toLine").value(hasItem(DEFAULT_TO_LINE)));
     }
 
     @Test
@@ -234,7 +246,9 @@ public class ReTagProfileResourceIntTest {
             .andExpect(jsonPath("$.inputFile").value(Base64Utils.encodeToString(DEFAULT_INPUT_FILE)))
             .andExpect(jsonPath("$.phint").value(DEFAULT_PHINT.toString()))
             .andExpect(jsonPath("$.headers").value(DEFAULT_HEADERS.toString()))
-            .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+            .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()))
+            .andExpect(jsonPath("$.startFromLine").value(DEFAULT_START_FROM_LINE))
+            .andExpect(jsonPath("$.toLine").value(DEFAULT_TO_LINE));
     }
 
     @Test
@@ -260,7 +274,9 @@ public class ReTagProfileResourceIntTest {
             .inputFileContentType(UPDATED_INPUT_FILE_CONTENT_TYPE)
             .phint(UPDATED_PHINT)
             .headers(UPDATED_HEADERS)
-            .createDate(UPDATED_CREATE_DATE);
+            .createDate(UPDATED_CREATE_DATE)
+            .startFromLine(UPDATED_START_FROM_LINE)
+            .toLine(UPDATED_TO_LINE);
         ReTagProfileDTO reTagProfileDTO = reTagProfileMapper.toDto(updatedReTagProfile);
 
         restReTagProfileMockMvc.perform(put("/api/re-tag-profiles")
@@ -278,6 +294,8 @@ public class ReTagProfileResourceIntTest {
         assertThat(testReTagProfile.getPhint()).isEqualTo(UPDATED_PHINT);
         assertThat(testReTagProfile.getHeaders()).isEqualTo(UPDATED_HEADERS);
         assertThat(testReTagProfile.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
+        assertThat(testReTagProfile.getStartFromLine()).isEqualTo(UPDATED_START_FROM_LINE);
+        assertThat(testReTagProfile.getToLine()).isEqualTo(UPDATED_TO_LINE);
     }
 
     @Test
