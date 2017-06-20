@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.oracle.qa.dataload.domain.enumeration.IdType;
 import com.oracle.qa.dataload.service.ReTagProfileService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
 import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
@@ -104,8 +105,8 @@ public class ReTagProfileResource {
 					completeHeader = "Cookie:bku=" + retagbkuid + "||" + reTagProfileDTO.getHeaders();
 				} else
 					completeHeader = "Cookie:bku=" + retagbkuid;
-				TagCallTask tagcalltask = new TagCallTask(reTagProfileDTO.getSiteId(), reTagProfileDTO.getPhint(),
-						completeHeader);
+			TagCallTask tagcalltask = new TagCallTask(reTagProfileDTO.getSiteId(), reTagProfileDTO.getPhint(),
+					completeHeader,IdType.bkuuid);
 				tagCallArrayList.add(tagcalltask);
 		 }
 

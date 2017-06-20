@@ -89,7 +89,7 @@ public class TagRequestResource {
 
         ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for (int i=0;i<tagRequestDTO.getRequestCount();i++){
-        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders()));
+        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders(),tagRequestDTO.getIdType()));
         }
         runner.useCompletableFutureWithExecutor(tagCallArrayList,result);
         /**
@@ -124,7 +124,7 @@ public class TagRequestResource {
          */
         ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for (int i=0;i<tagRequestDTO.getRequestCount();i++){
-        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders()));
+        	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders(),tagRequestDTO.getIdType()));
         }
         runner.useCompletableFutureWithExecutor(tagCallArrayList, result);
         /**
