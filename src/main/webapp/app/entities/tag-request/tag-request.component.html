@@ -38,7 +38,7 @@
                 <td>{{tagRequest.idType}}</td>
                 <td>{{tagRequest.requestCount}}</td>
                 <td>
-                    <a *ngIf="tagRequest.file" (click)="openFile(tagRequest.fileContentType, tagRequest.file)">open</a>
+                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file)"  >download</a>
                     <span *ngIf="tagRequest.file">{{tagRequest.fileContentType}}, {{byteSize(tagRequest.file)}}</span>
                 </td>
                 <td>{{tagRequest.createDate | date:'mediumDate'}}</td>

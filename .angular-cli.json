@@ -21,7 +21,9 @@
             "content/css/vendor.css",
             "content/css/global.css"
         ],
-        "scripts": []
+        "scripts": [
+        "../node_modules/file-saver/FileSaver.js"
+        ]
     }],
     "addons": [],
     "packages": [],

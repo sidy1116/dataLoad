@@ -17,7 +17,7 @@
     "prodDatabaseType": "mysql",
     "searchEngine": false,
     "messageBroker": false,
-    "serviceDiscoveryType": "eureka",
+    "serviceDiscoveryType": "false",
     "buildTool": "maven",
     "enableSocialSignIn": false,
     "jwtSecretKey": "9c2b49485c4d1747603965f9502ef97c2ad4533a",

@@ -7,6 +7,7 @@ import { TagRequest } from './tag-request.model';
 import { TagRequestService } from './tag-request.service';
 import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'jhi-tag-request',
@@ -87,6 +88,15 @@ export class TagRequestComponent implements OnInit, OnDestroy {
     openFile(contentType, field) {
         return this.dataUtils.openFile(contentType, field);
     }
+    
+    downloadFile( fileType:string,data: string){
+        console.log(data);
+        var blob2= this.base64toBlob(data,fileType);
+        //var url= window.URL.createObjectURL(blob2);
+        //window.open(url);
+        saveAs(blob2, 'data.text');
+    }
+    
     registerChangeInTagRequests() {
         this.eventSubscriber = this.eventManager.subscribe('tagRequestListModification', (response) => this.reset());
     }
@@ -97,6 +107,27 @@ export class TagRequestComponent implements OnInit, OnDestroy {
             result.push('id');
         }
         return result;
+    }
+    
+     base64toBlob(base64Data:string, contentType:string) {
+        contentType = contentType || '';
+        var sliceSize = 1024;
+        var byteCharacters = atob(base64Data);
+        var bytesLength = byteCharacters.length;
+        var slicesCount = Math.ceil(bytesLength / sliceSize);
+        var byteArrays = new Array(slicesCount);
+
+        for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+            var begin = sliceIndex * sliceSize;
+            var end = Math.min(begin + sliceSize, bytesLength);
+
+            var bytes = new Array(end - begin);
+            for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+                bytes[i] = byteCharacters[offset].charCodeAt(0);
+            }
+            byteArrays[sliceIndex] = new Uint8Array(bytes);
+        }
+        return new Blob(byteArrays, { type: contentType });
     }
 
     private onSuccess(data, headers) {
