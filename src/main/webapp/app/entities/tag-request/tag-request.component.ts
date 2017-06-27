@@ -25,6 +25,7 @@ export class TagRequestComponent implements OnInit, OnDestroy {
     queryCount: any;
     reverse: any;
     totalItems: number;
+    datenow: any; 
 
     constructor(
         private tagRequestService: TagRequestService,
@@ -42,6 +43,8 @@ export class TagRequestComponent implements OnInit, OnDestroy {
         };
         this.predicate = 'id';
         this.reverse = false;
+        this.datenow=new Date();
+        
     }
 
     loadAll() {
@@ -55,6 +58,12 @@ export class TagRequestComponent implements OnInit, OnDestroy {
         );
     }
 
+    dateDiff(date2:any){
+        console.log(date2);
+        var diff = Math.abs(new Date().getTime() - date2.getTime());
+        var diffDays = Math.ceil(diff / (1000 * 3600 * 24)); 
+        return diffDays;
+    }
     reset() {
         this.page = 0;
         this.tagRequests = [];

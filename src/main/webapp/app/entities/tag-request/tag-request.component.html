@@ -32,11 +32,17 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let tagRequest of tagRequests ;trackBy: trackId">
                 <td><a [routerLink]="['../tag-request', tagRequest.id ]">{{tagRequest.id}}</a></td>
-                  <td><div *ngIf="tagRequest.file" class="fa fa-check fa-2x text-success font-weight-bold" style="" aria-hidden="true">
+                  <td><div *ngIf="tagRequest.file; else fail" class="fa fa-check fa-2x text-success font-weight-bold" style="" aria-hidden="true">
                   </div>
+                 <ng-template #fail>
+                 	<div *ngIf="dateDiff(tagRequest.createDate) > 1 ; else inprogress" class="fa fa-exclamation-circle fa-2x  text-danger font-weight-bold" style="">
+                  </div> 
+                  <ng-template #inprogress> 
+                  <div  class="fa fa-clock-o fa-2x  text-warning font-weight-bold" style="">
                   
-                 <div *ngIf="!tagRequest.file" class="fa fa-times fa-2x  text-danger font-weight-bold" style="">
-                  </div>
+                  </ng-template>
+                  </ng-template>
+                 
                   
                   </td>
                 <td>{{tagRequest.siteId}}</td>
