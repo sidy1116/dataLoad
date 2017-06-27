@@ -17,11 +17,12 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="status"><span>Status</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="siteId"><span>Site Id</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="phints"><span>Phints</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="referelUrl"><span>Referel Url</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="headers"><span>Headers</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="idType"><span>Id Type</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="idType"><span>ID Type</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="requestCount"><span>Request Count</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="file"><span>File</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
@@ -31,6 +32,13 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let tagRequest of tagRequests ;trackBy: trackId">
                 <td><a [routerLink]="['../tag-request', tagRequest.id ]">{{tagRequest.id}}</a></td>
+                  <td><div *ngIf="tagRequest.file" class="fa fa-check fa-2x text-success font-weight-bold" style="" aria-hidden="true">
+                  </div>
+                  
+                 <div *ngIf="!tagRequest.file" class="fa fa-times fa-2x  text-danger font-weight-bold" style="">
+                  </div>
+                  
+                  </td>
                 <td>{{tagRequest.siteId}}</td>
                 <td>{{tagRequest.phints}}</td>
                 <td>{{tagRequest.referelUrl}}</td>
@@ -38,8 +46,8 @@
                 <td>{{tagRequest.idType}}</td>
                 <td>{{tagRequest.requestCount}}</td>
                 <td>
-                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file)"  >download</a>
-                    <span *ngIf="tagRequest.file">{{tagRequest.fileContentType}}, {{byteSize(tagRequest.file)}}</span>
+                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file)" class="fa fa-download fa-2x"  ></a>
+                   
                 </td>
                 <td>{{tagRequest.createDate | date:'mediumDate'}}</td>
                 <td class="text-right">
