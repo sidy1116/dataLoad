@@ -38,7 +38,7 @@
                  	<div *ngIf="dateDiff(tagRequest.createDate) > 1 ; else inprogress" class="fa fa-exclamation-circle fa-2x  text-danger font-weight-bold" style="">
                   </div> 
                   <ng-template #inprogress> 
-                  <div  class="fa fa-clock-o fa-2x  text-warning font-weight-bold" style="">
+                  <div  class="fa fa-clock-o fa-2x  text-warning font-weight-bold" ></div>
                   
                   </ng-template>
                   </ng-template>
@@ -52,7 +52,7 @@
                 <td>{{tagRequest.idType}}</td>
                 <td>{{tagRequest.requestCount}}</td>
                 <td>
-                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file)" class="fa fa-download fa-2x"  ></a>
+                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file, tagRequest.id )" class="fa fa-download fa-2x"  ></a>
                    
                 </td>
                 <td>{{tagRequest.createDate | date:'mediumDate'}}</td>

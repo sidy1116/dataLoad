@@ -98,12 +98,12 @@ export class TagRequestComponent implements OnInit, OnDestroy {
         return this.dataUtils.openFile(contentType, field);
     }
     
-    downloadFile( fileType:string,data: string){
+    downloadFile( fileType:string,data: string,jobid:string){
         console.log(data);
         var blob2= this.base64toBlob(data,fileType);
         //var url= window.URL.createObjectURL(blob2);
         //window.open(url);
-        saveAs(blob2, 'data.text');
+        saveAs(blob2, 'data_job_id_'+jobid+'.text', );
     }
     
     registerChangeInTagRequests() {
