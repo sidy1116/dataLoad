@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "inputFile",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "categoryId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "startFrom",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "toLine",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "outputFile",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "verifyDate",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20170628113958",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "verify_user_tag",
+    "pagination": "pagination"
+}

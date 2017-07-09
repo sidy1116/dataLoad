@@ -25,7 +25,8 @@ export class TagRequestDialogComponent implements OnInit {
     createDateDp: any;
     phintRows = [];
     headerRows = [];
-
+    textValue:number ;
+    
     constructor(
         public activeModal: NgbActiveModal,
         private dataUtils: DataUtils,
@@ -56,6 +57,14 @@ export class TagRequestDialogComponent implements OnInit {
     }
     deleteHeaderRow( i: number ) {
         this.headerRows.splice( i, 1 );
+    }
+    
+    restrictNumeric(event, value, min, max) 
+    {
+      if(parseInt(value) < min || isNaN(parseInt(value))) 
+          console.log("invalid min value");
+      else if(parseInt(value) > max || isNaN(parseInt(value))) 
+             this.tagRequest.requestCount = 1000000;
     }
     
     byteSize( field ) {

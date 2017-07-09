@@ -1,3 +1,4 @@
+
 package com.oracle.qa.dataload.service.executors;
 
 import java.io.ByteArrayOutputStream;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.oracle.qa.dataload.service.ReTagProfileService;
 import com.oracle.qa.dataload.service.TagRequestService;
+import com.oracle.qa.dataload.service.VerifyUserTagService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
+import com.oracle.qa.dataload.service.async.tasks.VerifyBkuidTask;
 import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
+import com.oracle.qa.dataload.service.dto.VerifyUserTagDTO;
 
 @Service
 public class Runner  {
@@ -27,6 +31,9 @@ public class Runner  {
 	
 	@Autowired
 	private Executor taskExecutor;
+	
+	@Autowired
+	private  VerifyUserTagService verifyUserTagService;
 	
 	@Async
 	public  void useCompletableFutureWithExecutor(List<TagCallTask> tasks,TagRequestDTO tagRequestDTO) throws IOException  {
@@ -55,6 +62,10 @@ public class Runner  {
 	        } finally {
 	        	 tagRequestDTO.setFile(btOs.toByteArray());
 	        	 tagRequestDTO.setFileContentType("text/plain");
+	        	 
+	        	 // validation if present is not present then dont reinset it 
+	        	 
+	        	 // update to bkuuid actually created 
 	 	        tagRequestService.save(tagRequestDTO);
 	        }
 	       
@@ -79,6 +90,40 @@ public class Runner  {
 		  System.out.printf("Processed %d tasks in %d millis\n", tasks.size(), duration);
 		  System.out.println(result);
 		 
+		}
+	
+	
+	@Async
+	public  void useVerifyBkuidTaskCompletableFutureWithExecutor(List<VerifyBkuidTask> tasks,VerifyUserTagDTO verifyUserTagDTO) throws IOException  {
+		  long start = System.nanoTime();
+		  
+		  List<CompletableFuture<String>> futures =
+		      tasks.stream()
+		           .map(t -> CompletableFuture.supplyAsync(() -> t.verifyBkuid(),taskExecutor))
+		           .collect(Collectors.toList());
+		 
+		  List<String> result =
+		      futures.stream()
+		             .map(CompletableFuture::join)
+		             .collect(Collectors.toList());
+		  long duration = (System.nanoTime() - start) / 1_000_000;
+		  System.out.printf("Processed %d tasks in %d millis\n", tasks.size(), duration);
+		  
+		  ByteArrayOutputStream btOs = new ByteArrayOutputStream();
+		  String nl = System.getProperty("line.separator");
+	        try {
+
+	            for (String bkuid:result) {
+	            	btOs.write(bkuid.getBytes() );
+	            	btOs.write(nl.getBytes() );
+	            }
+	        } finally {
+	        	 verifyUserTagDTO.setOutputFile(btOs.toByteArray());
+	        	 verifyUserTagDTO.setOutputFileContentType("text/plain");
+	        	 verifyUserTagService.save(verifyUserTagDTO);
+	        }
+	       
+	        
 		}
 	 
 	

@@ -1,5 +1,6 @@
 package com.oracle.qa.dataload.service.async.tasks;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -42,32 +43,36 @@ public class TagCallTask {
 	public String makeTagCalls() {
 		String bkuid = "";
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-
+		String returnID="";
 		switch (idType) {
 		case bkuuid:
-
+			
 			break;
 		case adid:
 			String adid =getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-" +getRandomHexString(4) + "-" +getRandomHexString(12);
 			builder.queryParam("adid", adid);
+			returnID=adid;
 			break;
 		case idfa:
 			String idfa = getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-" +getRandomHexString(4) + "-" +getRandomHexString(12);
 			builder.queryParam("idfa", idfa);
-
+			returnID=idfa;
 			break;
 		case e_id_m:
-			builder.queryParam("idfa", getRandomHexString(32));
+			returnID  =getRandomHexString(32);
+			builder.queryParam("e_id_m",returnID );
 			break;
 		case e_id_s:
-			
-			builder.queryParam("e_id_s", getRandomHexString(64));
+			returnID  =getRandomHexString(64);
+			builder.queryParam("e_id_s", returnID);
 			break;
 		case p_id_m:
-			builder.queryParam("idfa", getRandomHexString(32));
+			returnID  =getRandomHexString(32);
+			builder.queryParam("p_id_m", returnID);
 			break;
 		case p_id_s:
-			builder.queryParam("p_id_s", getRandomHexString(64));
+			returnID  =getRandomHexString(64);
+			builder.queryParam("p_id_s", returnID);
 			break;
 		}
 
@@ -114,7 +119,9 @@ public class TagCallTask {
 			}
 
 		}
-
+		try{
+			
+		
 		HttpEntity<?> entity = new HttpEntity<>(headers2);
 		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).encode().toUri(),
 				HttpMethod.GET, entity, String.class);
@@ -122,11 +129,23 @@ public class TagCallTask {
 		if (HttpStatus.OK == response.getStatusCode()) {
 			System.out.println(AsyncUtil.getThreadName());
 
+			if(idType.equals(IdType.bkuuid))
 			bkuid = response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "");
+			else{
+				bkuid =	response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "") +"  ||  "+returnID;
+			}
 		} else {
 			bkuid = "BKU NOT FOUND";
 		}
-
+		}finally{
+			try {
+				httpClient.close();
+			
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return bkuid;
 
 	}

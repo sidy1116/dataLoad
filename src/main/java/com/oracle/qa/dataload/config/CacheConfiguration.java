@@ -42,6 +42,7 @@ public class CacheConfiguration {
             cm.createCache(com.oracle.qa.dataload.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(com.oracle.qa.dataload.domain.TagRequest.class.getName(), jcacheConfiguration);
             cm.createCache(com.oracle.qa.dataload.domain.ReTagProfile.class.getName(), jcacheConfiguration);
+            cm.createCache(com.oracle.qa.dataload.domain.VerifyUserTag.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

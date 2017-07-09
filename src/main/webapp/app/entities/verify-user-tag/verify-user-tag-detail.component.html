@@ -1,0 +1,51 @@
+
+<div *ngIf="verifyUserTag">
+    <h2><span>Verify User Tag</span> {{verifyUserTag.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Input File</span></dt>
+        <dd>
+            <div *ngIf="verifyUserTag.inputFile">
+                <a (click)="openFile(verifyUserTag.inputFileContentType, verifyUserTag.inputFile)">open</a>
+                {{verifyUserTag.inputFileContentType}}, {{byteSize(verifyUserTag.inputFile)}}
+            </div>
+        </dd>
+        <dt><span>Category Id</span></dt>
+        <dd>
+            <span>{{verifyUserTag.categoryId}}</span>
+        </dd>
+        <dt><span>Start From</span></dt>
+        <dd>
+            <span>{{verifyUserTag.startFrom}}</span>
+        </dd>
+        <dt><span>To Line</span></dt>
+        <dd>
+            <span>{{verifyUserTag.toLine}}</span>
+        </dd>
+        <dt><span>Output File</span></dt>
+        <dd>
+            <div *ngIf="verifyUserTag.outputFile">
+                <a (click)="openFile(verifyUserTag.outputFileContentType, verifyUserTag.outputFile)">open</a>
+                {{verifyUserTag.outputFileContentType}}, {{byteSize(verifyUserTag.outputFile)}}
+            </div>
+        </dd>
+        <dt><span>Verify Date</span></dt>
+        <dd>
+            <span>{{verifyUserTag.verifyDate | date:'mediumDate'}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'verify-user-tag/'+ verifyUserTag.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

@@ -20,7 +20,7 @@
             <th jhiSortBy="status"><span>Status</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="siteId"><span>Site Id</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="phints"><span>Phints</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="referelUrl"><span>Referel Url</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="referelUrl"><span>Referrer Url</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="headers"><span>Headers</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="idType"><span>ID Type</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="requestCount"><span>Request Count</span> <span class="fa fa-sort"></span></th>
@@ -46,9 +46,22 @@
                   
                   </td>
                 <td>{{tagRequest.siteId}}</td>
-                <td>{{tagRequest.phints}}</td>
+                <td>
+	                <ng-template #tipContent><b>{{tagRequest.phints}}</b></ng-template>
+						<div [ngbTooltip]="tipContent">
+						  {{tagRequest.phints | slice:0:20}}
+						</div>
+                </td>
                 <td>{{tagRequest.referelUrl}}</td>
-                <td>{{tagRequest.headers}}</td>
+                <td>
+                
+                 <ng-template #tipContentHeader><b>{{tagRequest.headers}}</b></ng-template>
+						<div [ngbTooltip]="tipContentHeader">
+						  {{tagRequest.headers | slice:0:50}}
+						</div>
+                
+                
+                </td>
                 <td>{{tagRequest.idType}}</td>
                 <td>{{tagRequest.requestCount}}</td>
                 <td>
@@ -64,6 +77,7 @@
                             <span class="fa fa-eye"></span>
                             <span class="hidden-md-down">View</span>
                         </button>
+                        <!-- 
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'tag-request/'+ tagRequest.id + '/edit'} }]"
                                 replaceUrl="true"
@@ -71,13 +85,26 @@
                             <span class="fa fa-pencil"></span>
                             <span class="hidden-md-down">Edit</span>
                         </button>
-                        <button type="submit"
+                         -->
+                         
+                        <button  *ngIf="tagRequest.file; else failDelete" type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'tag-request/'+ tagRequest.id + '/delete'} }]"
                                 replaceUrl="true"
                                 class="btn btn-danger btn-sm">
                             <span class="fa fa-remove"></span>
                             <span class="hidden-md-down">Delete</span>
                         </button>
+                        <ng-template #failDelete>
+                        <div *ngIf="dateDiff(tagRequest.createDate) > 1">
+                  		<button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'tag-request/'+ tagRequest.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="hidden-md-down">Delete</span>
+                        </button>
+                        </div> 
+                        </ng-template>
                     </div>
                 </td>
             </tr>

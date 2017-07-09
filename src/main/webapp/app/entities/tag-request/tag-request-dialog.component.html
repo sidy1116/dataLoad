@@ -2,7 +2,7 @@
 	#editForm="ngForm">
 
 	<div class="modal-header">
-		<h4 class="modal-title" id="myTagRequestLabel">Create or edit a
+		<h4 class="modal-title" id="myTagRequestLabel">Create a
 			Tag Request</h4>
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
@@ -15,7 +15,7 @@
 		</div>
 		<div class="form-group">
 			<label class="form-control-label" for="field_siteId">Site Id</label>
-			<input type="number" class="form-control" name="siteId"
+			<input type="number"   min="1" max="100000" class="form-control" name="siteId"
 				id="field_siteId" [(ngModel)]="tagRequest.siteId" required />
 			<div
 				[hidden]="!(editForm.controls.siteId?.dirty && editForm.controls.siteId?.invalid)">
@@ -49,9 +49,9 @@
 
 
 		<div class="form-group">
-			<label class="form-control-label" for="field_referelUrl">Referel
+			<label class="form-control-label" for="field_referelUrl">Referrer
 				Url</label> <input type="text" class="form-control" name="referelUrl"
-				id="field_referelUrl" [(ngModel)]="tagRequest.referelUrl" />
+				id="field_referelUrl" [(ngModel)]="tagRequest.referelUrl" placeholder="www.google.com" />
 		</div>
 
 		<div>
@@ -99,13 +99,13 @@
 			<label class="form-control-label" for="field_idType">Id Type</label>
 			<select class="form-control" name="idType"
 				[(ngModel)]="tagRequest.idType" id="field_idType" required>
-				<option value="bkuuid">bkuuid</option>
-				<option value="adid">adid</option>
-				<option value="idfa">idfa</option>
-				<option value="e_id_m">e_id_m</option>
-				<option value="e_id_s">e_id_s</option>
-				<option value="p_id_m">p_id_m</option>
-				<option value="p_id_s">p_id_s</option>
+				<option value="bkuuid">Bluekai 3rd party Desktop Cookie ID</option>
+				<option value="adid">Google Advertising ID (AdID)</option>
+				<option value="idfa">Apple Idfa</option>
+				<option value="e_id_m">Email ID MD5</option>
+				<option value="e_id_s">Email ID SHA-256</option>
+				<option value="p_id_m">Phone id MD5</option>
+				<option value="p_id_s">Phone id SHA-256</option>
 			</select>
 			<div
 				[hidden]="!(editForm.controls.idType?.dirty && editForm.controls.idType?.invalid)">
@@ -116,7 +116,7 @@
 		</div>
 		<div class="form-group">
 			<label class="form-control-label" for="field_requestCount">Request
-				Count</label> <input type="number" class="form-control" name="requestCount"
+				Count</label> <input type="number" #textbox  (keyup)="restrictNumeric($event, textbox.value, 1, 1000000)" class="form-control" name="requestCount"
 				id="field_requestCount" [(ngModel)]="tagRequest.requestCount"
 				required />
 			<div
@@ -128,28 +128,7 @@
 					This field should be a number. </small>
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="form-control-label" for="field_file">File</label>
-			<div>
-				<div *ngIf="tagRequest.file" class="form-text text-danger clearfix">
-					<a class="pull-left"
-						(click)="openFile(tagRequest.fileContentType, tagRequest.file)">open</a><br>
-					<span class="pull-left">{{tagRequest.fileContentType}},
-						{{byteSize(tagRequest.file)}}</span>
-					<button type="button"
-						(click)="tagRequest.file=null;tagRequest.fileContentType=null;"
-						class="btn btn-default btn-xs pull-right">
-						<span class="fa fa-times"></span>
-					</button>
-				</div>
-				<input type="file"
-					(change)="setFileData($event, tagRequest, 'file', false)" />
-			</div>
-			<input type="hidden" class="form-control" name="file" id="field_file"
-				[(ngModel)]="tagRequest.file" /> <input type="hidden"
-				class="form-control" name="fileContentType"
-				id="field_fileContentType" [(ngModel)]="tagRequest.fileContentType" />
-		</div>
+		
 
 
 	</div>
