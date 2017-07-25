@@ -1,17 +1,18 @@
 package com.oracle.qa.dataload.service.dto;
 
-import com.oracle.qa.dataload.config.Constants;
+import java.time.Instant;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.oracle.qa.dataload.domain.Authority;
-import com.oracle.qa.dataload.domain.User;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.*;
-import java.time.Instant;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.oracle.qa.dataload.config.Constants;
+import com.oracle.qa.dataload.domain.Authority;
+import com.oracle.qa.dataload.domain.User;
 
 /**
  * A DTO representing a user, with his authorities.

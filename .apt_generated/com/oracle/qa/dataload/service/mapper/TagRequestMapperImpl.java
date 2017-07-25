@@ -1,18 +1,15 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import com.oracle.qa.dataload.domain.TagRequest;
-
-import com.oracle.qa.dataload.service.dto.TagRequestDTO;
-
 import java.util.ArrayList;
-
 import java.util.Arrays;
-
 import java.util.List;
 
 import javax.annotation.Generated;
 
 import org.springframework.stereotype.Component;
+
+import com.oracle.qa.dataload.domain.TagRequest;
+import com.oracle.qa.dataload.service.dto.TagRequestDTO;
 
 @Generated(
 

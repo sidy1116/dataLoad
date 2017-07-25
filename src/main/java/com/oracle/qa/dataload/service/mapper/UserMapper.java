@@ -1,13 +1,15 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import com.oracle.qa.dataload.domain.Authority;
-import com.oracle.qa.dataload.domain.User;
-import com.oracle.qa.dataload.service.dto.UserDTO;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.oracle.qa.dataload.domain.Authority;
+import com.oracle.qa.dataload.domain.User;
+import com.oracle.qa.dataload.service.dto.UserDTO;
 
 /**
  * Mapper for the entity User and its DTO called UserDTO.

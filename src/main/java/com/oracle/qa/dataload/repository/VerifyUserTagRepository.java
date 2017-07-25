@@ -1,9 +1,9 @@
 package com.oracle.qa.dataload.repository;
 
-import com.oracle.qa.dataload.domain.VerifyUserTag;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.data.jpa.repository.*;
+import com.oracle.qa.dataload.domain.VerifyUserTag;
 
 
 /**

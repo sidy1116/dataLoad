@@ -10,12 +10,9 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.hibernate.service.spi.InjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.oracle.qa.dataload.service.TagRequestService;
-import com.oracle.qa.dataload.service.UserService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
 import com.oracle.qa.dataload.service.executors.Runner;

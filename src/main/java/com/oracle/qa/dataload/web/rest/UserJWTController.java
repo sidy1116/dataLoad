@@ -1,11 +1,9 @@
 package com.oracle.qa.dataload.web.rest;
 
-import com.oracle.qa.dataload.security.jwt.JWTConfigurer;
-import com.oracle.qa.dataload.security.jwt.TokenProvider;
-import com.oracle.qa.dataload.web.rest.vm.LoginVM;
+import java.util.Collections;
 
-import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +14,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Collections;
+import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.oracle.qa.dataload.security.jwt.JWTConfigurer;
+import com.oracle.qa.dataload.security.jwt.TokenProvider;
+import com.oracle.qa.dataload.web.rest.vm.LoginVM;
 
 /**
  * Controller to authenticate users.

@@ -18,6 +18,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.oracle.qa.dataload.config.ApplicationProperties;
 import com.oracle.qa.dataload.config.DefaultProfileUtil;
@@ -91,5 +94,14 @@ public class DataLoadApp {
         return new Runner();
     }
    
-    
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+            	String[]  allowedOrigins={"GET","POST"};
+                registry.addMapping("/api/**").allowedOrigins("*").allowedHeaders("*").allowedMethods(allowedOrigins);
+            }
+        };
+    }
 }

@@ -1,15 +1,16 @@
 package com.oracle.qa.dataload.service;
 
-import com.oracle.qa.dataload.domain.TagRequest;
-import com.oracle.qa.dataload.repository.TagRequestRepository;
-import com.oracle.qa.dataload.service.dto.TagRequestDTO;
-import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.oracle.qa.dataload.domain.TagRequest;
+import com.oracle.qa.dataload.repository.TagRequestRepository;
+import com.oracle.qa.dataload.service.dto.TagRequestDTO;
+import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
 
 
 /**

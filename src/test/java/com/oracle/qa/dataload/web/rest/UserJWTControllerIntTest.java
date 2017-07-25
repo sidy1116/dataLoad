@@ -1,10 +1,9 @@
 package com.oracle.qa.dataload.web.rest;
 
-import com.oracle.qa.dataload.DataLoadApp;
-import com.oracle.qa.dataload.domain.User;
-import com.oracle.qa.dataload.repository.UserRepository;
-import com.oracle.qa.dataload.security.jwt.TokenProvider;
-import com.oracle.qa.dataload.web.rest.vm.LoginVM;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.oracle.qa.dataload.DataLoadApp;
+import com.oracle.qa.dataload.domain.User;
+import com.oracle.qa.dataload.repository.UserRepository;
+import com.oracle.qa.dataload.security.jwt.TokenProvider;
+import com.oracle.qa.dataload.web.rest.vm.LoginVM;
 
 /**
  * Test class for the UserJWTController REST controller.

@@ -24,12 +24,28 @@ public class VerifyBkuidTask {
 	private String bkuid ;
 	private String id ;
 	private String password ;
+	private String categoryID ;
+	private String prefix=">";
+	private String postfix="&nbsp;<";		
 	
-	public VerifyBkuidTask(String bkuid, String id, String password) {
+	public String getCategoryID() {
+		return categoryID;
+	}
+
+
+	public void setCategoryID(String categoryID) {
+		this.categoryID = categoryID;
+	}
+
+
+
+
+	public VerifyBkuidTask(String bkuid, String id, String password, String categoryID) {
 		super();
 		this.bkuid = bkuid;
 		this.id = id;
 		this.password = password;
+		this.categoryID = categoryID;
 	}
 
 
@@ -71,7 +87,12 @@ public class VerifyBkuidTask {
 		if (HttpStatus.OK == response.getStatusCode()) {
 			
 			System.out.println("RESPONSE==>"+ response.getBody());
-			return bkuid +"  || VERIFIED";
+			if(response.getBody().contains(prefix+categoryID+postfix)){
+				return bkuid +"  || VERIFIED";
+			}
+			
+			
+			return bkuid +"NOT VERIFIED" ;
 		}else return "NOT VERIFIED";
 		
 		

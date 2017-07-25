@@ -1,0 +1,183 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-1">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-2">
+        <createTable tableName="jhi_persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="BINARY(255)"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-3">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-4">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="BINARY(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="BINARY(255)"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="lang_key" type="VARCHAR(5)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="reset_date" type="BINARY(255)"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-5">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-6">
+        <createTable tableName="rads_category_inventory">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="rads_category_inventoryPK"/>
+            </column>
+            <column name="cat_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cat_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-7">
+        <createTable tableName="rads_inventory">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="rads_inventoryPK"/>
+            </column>
+            <column name="cat_id" type="INT"/>
+            <column name="cat_name" type="VARCHAR(255)"/>
+            <column name="count" type="BIGINT"/>
+            <column name="inventory_date" type="BINARY(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-8">
+        <createTable tableName="re_tag_profile">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="re_tag_profilePK"/>
+            </column>
+            <column name="create_date" type="BINARY(255)"/>
+            <column name="headers" type="VARCHAR(255)"/>
+            <column name="input_file" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="input_file_content_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phint" type="VARCHAR(255)"/>
+            <column name="site_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_from_line" type="INT"/>
+            <column name="to_line" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-9">
+        <createTable tableName="tag_request">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tag_requestPK"/>
+            </column>
+            <column name="create_date" type="BINARY(255)"/>
+            <column name="jhi_file" type="BLOB"/>
+            <column name="jhi_file_content_type" type="VARCHAR(255)"/>
+            <column name="headers" type="VARCHAR(255)"/>
+            <column name="id_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phints" type="VARCHAR(255)"/>
+            <column name="referel_url" type="VARCHAR(255)"/>
+            <column name="request_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="site_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-10">
+        <createTable tableName="verify_user_tag">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="verify_user_tagPK"/>
+            </column>
+            <column name="category_id" type="VARCHAR(255)"/>
+            <column name="input_file" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="input_file_content_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="output_file" type="BLOB"/>
+            <column name="output_file_content_type" type="VARCHAR(255)"/>
+            <column name="start_from" type="INT"/>
+            <column name="to_line" type="INT"/>
+            <column name="verify_date" type="BINARY(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-11">
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-12">
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-13">
+        <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-14">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-15">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-16">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-17">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event"/>
+    </changeSet>
+    <changeSet author="siddhant.choudhary (generated)" id="1499857445423-18">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority"/>
+    </changeSet>
+</databaseChangeLog>

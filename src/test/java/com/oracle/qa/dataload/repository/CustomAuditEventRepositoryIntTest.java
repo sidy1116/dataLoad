@@ -1,9 +1,15 @@
 package com.oracle.qa.dataload.repository;
 
-import com.oracle.qa.dataload.DataLoadApp;
-import com.oracle.qa.dataload.config.Constants;
-import com.oracle.qa.dataload.config.audit.AuditEventConverter;
-import com.oracle.qa.dataload.domain.PersistentAuditEvent;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,14 +22,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.oracle.qa.dataload.DataLoadApp;
+import com.oracle.qa.dataload.config.Constants;
+import com.oracle.qa.dataload.config.audit.AuditEventConverter;
+import com.oracle.qa.dataload.domain.PersistentAuditEvent;
 
 /**
  * Test class for the CustomAuditEventRepository customAuditEventRepository class.

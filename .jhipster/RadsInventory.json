@@ -1,0 +1,35 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "catId",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "catName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "inventoryDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "count",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "prevInvCount",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "diffPercentage",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170712081007",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "rads_inventory",
+    "pagination": "pagination"
+}

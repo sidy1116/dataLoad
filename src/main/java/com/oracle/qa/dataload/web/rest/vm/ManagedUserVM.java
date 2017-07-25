@@ -1,10 +1,11 @@
 package com.oracle.qa.dataload.web.rest.vm;
 
-import com.oracle.qa.dataload.service.dto.UserDTO;
-import javax.validation.constraints.Size;
-
 import java.time.Instant;
 import java.util.Set;
+
+import javax.validation.constraints.Size;
+
+import com.oracle.qa.dataload.service.dto.UserDTO;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.

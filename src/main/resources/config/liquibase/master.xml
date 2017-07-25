@@ -9,6 +9,11 @@
     <include file="classpath:config/liquibase/changelog/20170612210248_added_entity_ReTagProfile.xml" relativeToChangelogFile="false"/>
     
     <include file="classpath:config/liquibase/changelog/20170628113958_added_entity_VerifyUserTag.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="classpath:config/liquibase/changelog/20170712064849_added_entity_RadsCategoryInventory.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170712081007_added_entity_RadsInventory.xml" relativeToChangelogFile="false"/>
+  <!--  <include file="classpath:config/liquibase/changelog/20170712110733_changelog.xml" relativeToChangelogFile="false"/>
+    -->
+    <!-- 
+     jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

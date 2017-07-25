@@ -1,18 +1,15 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import com.oracle.qa.dataload.domain.ReTagProfile;
-
-import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
-
 import java.util.ArrayList;
-
 import java.util.Arrays;
-
 import java.util.List;
 
 import javax.annotation.Generated;
 
 import org.springframework.stereotype.Component;
+
+import com.oracle.qa.dataload.domain.ReTagProfile;
+import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
 
 @Generated(
 

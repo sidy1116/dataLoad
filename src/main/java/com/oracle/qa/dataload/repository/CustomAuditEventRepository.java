@@ -1,8 +1,7 @@
 package com.oracle.qa.dataload.repository;
 
-import com.oracle.qa.dataload.config.Constants;
-import com.oracle.qa.dataload.config.audit.AuditEventConverter;
-import com.oracle.qa.dataload.domain.PersistentAuditEvent;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
@@ -10,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import com.oracle.qa.dataload.config.Constants;
+import com.oracle.qa.dataload.config.audit.AuditEventConverter;
+import com.oracle.qa.dataload.domain.PersistentAuditEvent;
 
 /**
  * An implementation of Spring Boot's AuditEventRepository.

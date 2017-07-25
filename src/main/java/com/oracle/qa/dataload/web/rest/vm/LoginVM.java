@@ -1,9 +1,10 @@
 package com.oracle.qa.dataload.web.rest.vm;
 
-import com.oracle.qa.dataload.config.Constants;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.oracle.qa.dataload.config.Constants;
 
 /**
  * View Model object for storing a user's credentials.

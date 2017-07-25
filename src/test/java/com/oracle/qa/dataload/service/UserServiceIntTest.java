@@ -1,27 +1,27 @@
 package com.oracle.qa.dataload.service;
 
-import com.oracle.qa.dataload.DataLoadApp;
-import com.oracle.qa.dataload.domain.User;
-import com.oracle.qa.dataload.config.Constants;
-import com.oracle.qa.dataload.repository.UserRepository;
-import com.oracle.qa.dataload.service.dto.UserDTO;
-import com.oracle.qa.dataload.service.util.RandomUtil;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import com.oracle.qa.dataload.DataLoadApp;
+import com.oracle.qa.dataload.config.Constants;
+import com.oracle.qa.dataload.domain.User;
+import com.oracle.qa.dataload.repository.UserRepository;
+import com.oracle.qa.dataload.service.dto.UserDTO;
+import com.oracle.qa.dataload.service.util.RandomUtil;
 
 /**
  * Test class for the UserResource REST controller.

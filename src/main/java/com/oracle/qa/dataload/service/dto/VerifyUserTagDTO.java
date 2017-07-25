@@ -1,11 +1,12 @@
 package com.oracle.qa.dataload.service.dto;
 
 
-import java.time.LocalDate;
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
+
 import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
 
 /**
  * A DTO for the VerifyUserTag entity.

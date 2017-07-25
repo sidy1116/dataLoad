@@ -1,9 +1,9 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import com.oracle.qa.dataload.domain.*;
-import com.oracle.qa.dataload.service.dto.VerifyUserTagDTO;
+import org.mapstruct.Mapper;
 
-import org.mapstruct.*;
+import com.oracle.qa.dataload.domain.VerifyUserTag;
+import com.oracle.qa.dataload.service.dto.VerifyUserTagDTO;
 
 /**
  * Mapper for the entity VerifyUserTag and its DTO VerifyUserTagDTO.

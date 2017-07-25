@@ -1,9 +1,6 @@
 package com.oracle.qa.dataload.config;
 
-import com.oracle.qa.dataload.security.*;
-import com.oracle.qa.dataload.security.jwt.*;
-
-import io.github.jhipster.security.*;
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +20,11 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.annotation.PostConstruct;
+import com.oracle.qa.dataload.security.AuthoritiesConstants;
+import com.oracle.qa.dataload.security.jwt.JWTConfigurer;
+import com.oracle.qa.dataload.security.jwt.TokenProvider;
+
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 
 @Configuration
 @EnableWebSecurity

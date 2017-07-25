@@ -1,10 +1,10 @@
 package com.oracle.qa.dataload.service.async;
 
-import com.google.common.base.Throwables;
-
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.base.Throwables;
 
 public class AsyncUtil {
     public static void sleep(Duration duration) {

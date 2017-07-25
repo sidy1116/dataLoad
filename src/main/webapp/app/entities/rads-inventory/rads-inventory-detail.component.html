@@ -1,0 +1,45 @@
+
+<div *ngIf="radsInventory">
+    <h2><span>Rads Inventory</span> {{radsInventory.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Cat Id</span></dt>
+        <dd>
+            <span>{{radsInventory.catId}}</span>
+        </dd>
+        <dt><span>Cat Name</span></dt>
+        <dd>
+            <span>{{radsInventory.catName}}</span>
+        </dd>
+        <dt><span>Inventory Date</span></dt>
+        <dd>
+            <span>{{radsInventory.inventoryDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Count</span></dt>
+        <dd>
+            <span>{{radsInventory.count}}</span>
+        </dd>
+        <dt><span>Prev Inv Count</span></dt>
+        <dd>
+            <span>{{radsInventory.prevInvCount}}</span>
+        </dd>
+        <dt><span>Diff Percentage</span></dt>
+        <dd>
+            <span>{{radsInventory.diffPercentage}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'rads-inventory/'+ radsInventory.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

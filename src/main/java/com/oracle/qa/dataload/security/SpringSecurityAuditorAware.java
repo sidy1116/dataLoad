@@ -1,9 +1,9 @@
 package com.oracle.qa.dataload.security;
 
-import com.oracle.qa.dataload.config.Constants;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
+
+import com.oracle.qa.dataload.config.Constants;
 
 /**
  * Implementation of AuditorAware based on Spring Security.

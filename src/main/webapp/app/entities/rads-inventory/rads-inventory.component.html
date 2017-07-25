@@ -1,0 +1,74 @@
+<div>
+    <h2>
+        <span>RADS Inventories</span>
+        <button class="btn btn-primary float-right create-rads-inventory" [routerLink]="['/', { outlets: { popup: ['rads-inventory-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Refresh RADS Inventory
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="radsInventories">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="catId"><span>Cat Id</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="catName"><span>Cat Name</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="inventoryDate"><span>Inventory Date</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="count"><span>Count</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="prevInvCount"><span>Prev Inv Count</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="diffPercentage"><span>Diff Percentage</span> <span class="fa fa-sort"></span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let radsInventory of radsInventories ;trackBy: trackId">
+                <td><a [routerLink]="['../rads-inventory', radsInventory.id ]">{{radsInventory.id}}</a></td>
+                <td>{{radsInventory.catId}}</td>
+                <td>{{radsInventory.catName}}</td>
+                <td>{{radsInventory.inventoryDate | date:'mediumDate'}}</td>
+                <td>{{radsInventory.count}}</td>
+                <td>{{radsInventory.prevInvCount}}</td>
+                <td>{{radsInventory.diffPercentage}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../rads-inventory', radsInventory.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="hidden-md-down">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'rads-inventory/'+ radsInventory.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="hidden-md-down">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'rads-inventory/'+ radsInventory.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="hidden-md-down">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+        <div *ngIf="radsInventories && radsInventories.length">
+            <div class="row justify-content-center">
+                <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+            </div>
+            <div class="row justify-content-center">
+                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
+            </div>
+        </div>
+</div>

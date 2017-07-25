@@ -5,7 +5,7 @@
         </a>
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
             <span class="logo-img"></span>
-            <span class="navbar-title">Battle Star</span> <span class="navbar-version">{{version}}</span>
+            <span class="navbar-title">Battlestar</span> <span class="navbar-version">{{version}}</span>
         </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
@@ -44,6 +44,18 @@
                         <a class="dropdown-item" routerLink="verify-user-tag" routerLinkActive="active" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Verify User Tag</span>
+                        </a>
+                    </li>
+                    <li *jhiHasAnyAuthority="'ROLE_ADMIN'" >
+                        <a class="dropdown-item" routerLink="rads-category-inventory" routerLinkActive="active" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span>Rads Category Inventory</span>
+                        </a>
+                    </li>
+                    <li *jhiHasAnyAuthority="'ROLE_ADMIN'" >
+                        <a class="dropdown-item" routerLink="rads-inventory" routerLinkActive="active" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span>Rads Inventory</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
