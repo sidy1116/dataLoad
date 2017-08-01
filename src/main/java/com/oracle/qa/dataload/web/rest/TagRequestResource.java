@@ -83,11 +83,13 @@ public class TagRequestResource {
          */
        
 
-        ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
+      /*  ArrayList<TagCallTask> tagCallArrayList=new ArrayList<TagCallTask>();
         for (int i=0;i<tagRequestDTO.getRequestCount();i++){
         	tagCallArrayList.add(new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders(),tagRequestDTO.getIdType()));
         }
         runner.useCompletableFutureWithExecutor(tagCallArrayList,result);
+        */
+        runner.tagCallwithCompletableFuture(tagRequestDTO.getRequestCount(), new TagCallTask(tagRequestDTO.getSiteId(),tagRequestDTO.getPhints(),tagRequestDTO.getHeaders(),tagRequestDTO.getIdType()), result);
         /**
          * 
          */

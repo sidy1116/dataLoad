@@ -19,6 +19,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,6 +30,7 @@ import com.oracle.qa.dataload.domain.enumeration.IdType;
 import com.oracle.qa.dataload.service.async.AsyncUtil;
 
 public class TagCallTask {
+
 	private String url = "http://tags.bluekai.com/site/{siteId}";
 
 	String siteId;
@@ -40,38 +45,41 @@ public class TagCallTask {
 		this.idType = type;
 	}
 
+	@Retryable(value = { IOException.class,HttpServerErrorException.class,NullPointerException.class }, maxAttempts = 5,backoff = @Backoff(delay = 1000))
 	public String makeTagCalls() {
 		String bkuid = "";
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-		String returnID="";
+		String returnID = "";
 		switch (idType) {
 		case bkuuid:
-			
+
 			break;
 		case adid:
-			String adid =getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-" +getRandomHexString(4) + "-" +getRandomHexString(12);
+			String adid = getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-"
+					+ getRandomHexString(4) + "-" + getRandomHexString(12);
 			builder.queryParam("adid", adid);
-			returnID=adid;
+			returnID = adid;
 			break;
 		case idfa:
-			String idfa = getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-" +getRandomHexString(4) + "-" +getRandomHexString(12);
+			String idfa = getRandomHexString(8) + "-" + getRandomHexString(4) + "-" + getRandomHexString(4) + "-"
+					+ getRandomHexString(4) + "-" + getRandomHexString(12);
 			builder.queryParam("idfa", idfa);
-			returnID=idfa;
+			returnID = idfa;
 			break;
 		case e_id_m:
-			returnID  =getRandomHexString(32);
-			builder.queryParam("e_id_m",returnID );
+			returnID = getRandomHexString(32);
+			builder.queryParam("e_id_m", returnID);
 			break;
 		case e_id_s:
-			returnID  =getRandomHexString(64);
+			returnID = getRandomHexString(64);
 			builder.queryParam("e_id_s", returnID);
 			break;
 		case p_id_m:
-			returnID  =getRandomHexString(32);
+			returnID = getRandomHexString(32);
 			builder.queryParam("p_id_m", returnID);
 			break;
 		case p_id_s:
-			returnID  =getRandomHexString(64);
+			returnID = getRandomHexString(64);
 			builder.queryParam("p_id_s", returnID);
 			break;
 		}
@@ -94,15 +102,17 @@ public class TagCallTask {
 					throws ProtocolException {
 
 				if (super.isRedirected(request, response, context)) {
-					int statusCode = response.getStatusLine().getStatusCode();
-					String redirectURL = response.getFirstHeader("Location").getValue();
+					// int statusCode =
+					// response.getStatusLine().getStatusCode();
+					// String redirectURL =
+					// response.getFirstHeader("Location").getValue();
 
 					return true;
 				}
 				return false;
 			}
 		})
-				//.setProxy(new HttpHost("www-proxy.us.oracle.com", 80))
+				// .setProxy(new HttpHost("www-proxy.us.oracle.com", 80))
 
 				.build();
 		factory.setHttpClient(httpClient);
@@ -119,33 +129,31 @@ public class TagCallTask {
 			}
 
 		}
-		try{
-			
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers2);
-		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).encode().toUri(),
-				HttpMethod.GET, entity, String.class);
-		// System.out.println("Request===>"+builder.buildAndExpand(uriParams).toUri());
-		if (HttpStatus.OK == response.getStatusCode()) {
-			System.out.println(AsyncUtil.getThreadName());
+		try {
 
-			if(idType.equals(IdType.bkuuid))
-			bkuid = response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "");
-			else{
-				bkuid =	response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "") +"  ||  "+returnID;
+			HttpEntity<?> entity = new HttpEntity<>(headers2);
+			ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).encode().toUri(),
+					HttpMethod.GET, entity, String.class);
+			if (HttpStatus.OK == response.getStatusCode()) {
+				System.out.println(AsyncUtil.getThreadName());
+
+				if (idType.equals(IdType.bkuuid))
+					bkuid = response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "");
+				else {
+					bkuid = response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "")
+							+ "  ||  " + returnID;
+				}
+			} else {
+				bkuid = "BKU NOT FOUND";
 			}
-		} else {
-			bkuid = "BKU NOT FOUND";
+
+			httpClient.close();
+		} catch (IOException io) {
+			System.out.println("IO Exception");
+		}catch (NullPointerException np) {
+			System.out.println("NullPointerException");
 		}
-		}finally{
-			try {
-				httpClient.close();
-			
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
 		return bkuid;
 
 	}
@@ -175,5 +183,41 @@ public class TagCallTask {
 
 		return sb.toString().substring(0, numchars);
 	}
+
+
+	public String getPhint() {
+		return phint;
+	}
+
+	public void setPhint(String phint) {
+		this.phint = phint;
+	}
+
+	public IdType getIdType() {
+		return idType;
+	}
+
+	public void setIdType(IdType idType) {
+		this.idType = idType;
+	}
+	
+	
+	@Recover
+    String recover(IOException e){
+		System.out.println("FAILED AFTER RETRY");
+		return "RECOVER/FAILED AFTER RETRY";
+ }
+
+	@Recover
+    String recover(HttpServerErrorException e){
+		System.out.println("FAILED AFTER RETRY");
+		return "RECOVER/FAILED AFTER RETRY";
+ }
+
+	@Recover
+    String recover(NullPointerException e){
+		System.out.println("Cookie Not Found");
+		return "RECOVER/Cookie Not Found";
+ }
 
 }

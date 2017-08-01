@@ -113,7 +113,7 @@ public class ReTagProfileResource {
 		ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
 
 		try {
-			runner.useCompletableFutureWithExecutor(tagCallArrayList, result);
+			runner.reTagWithCompletableFutureExecutor(tagCallArrayList, result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
