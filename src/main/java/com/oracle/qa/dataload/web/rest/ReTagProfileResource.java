@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.oracle.qa.dataload.domain.enumeration.IdType;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 import com.oracle.qa.dataload.service.ReTagProfileService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
 import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
@@ -83,7 +84,8 @@ public class ReTagProfileResource {
 		}
 
 		reTagProfileDTO.setCreateDate(LocalDate.now());
-
+		reTagProfileDTO.setReTagCount(0);
+		reTagProfileDTO.setStatus(Status.ACTIVE);
 		String[] inputFile = new String(reTagProfileDTO.getInputFile(), StandardCharsets.UTF_8).split("\n");
 
 		ArrayList<TagCallTask> tagCallArrayList = new ArrayList<TagCallTask>();
@@ -95,7 +97,8 @@ public class ReTagProfileResource {
 
 		 int from =reTagProfileDTO.getStartFromLine();
 		 int to=reTagProfileDTO.getToLine();
-		 
+			ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
+			reTagProfileDTO.setId(result.getId());
 		 if(from==1)from=0;
 		 
 		 for(int i=from;i<to;i++){
@@ -110,10 +113,9 @@ public class ReTagProfileResource {
 				tagCallArrayList.add(tagcalltask);
 		 }
 
-		ReTagProfileDTO result = reTagProfileService.save(reTagProfileDTO);
 
 		try {
-			runner.reTagWithCompletableFutureExecutor(tagCallArrayList, result);
+			runner.reTagWithCompletableFutureExecutor(tagCallArrayList, reTagProfileDTO);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,6 +167,8 @@ public class ReTagProfileResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/re-tag-profiles");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
+	
+	
 
 	/**
 	 * GET /re-tag-profiles/:id : get the "id" reTagProfile.
@@ -182,6 +186,14 @@ public class ReTagProfileResource {
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(reTagProfileDTO));
 	}
 
+	@GetMapping("/re-tag-profiles-file/{id}")
+	@Timed
+	public ResponseEntity<ReTagProfileDTO> getReTagProfileFile(@PathVariable Long id) {
+		log.debug("REST request to get ReTagProfile : {}", id);
+		ReTagProfileDTO reTagProfileDTO = reTagProfileService.findTagRequestFile(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(reTagProfileDTO));
+	}
+	
 	/**
 	 * DELETE /re-tag-profiles/:id : delete the "id" reTagProfile.
 	 *

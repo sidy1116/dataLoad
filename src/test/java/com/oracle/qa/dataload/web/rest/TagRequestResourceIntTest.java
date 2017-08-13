@@ -1,20 +1,13 @@
 package com.oracle.qa.dataload.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.oracle.qa.dataload.DataLoadApp;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import javax.persistence.EntityManager;
+import com.oracle.qa.dataload.domain.TagRequest;
+import com.oracle.qa.dataload.repository.TagRequestRepository;
+import com.oracle.qa.dataload.service.TagRequestService;
+import com.oracle.qa.dataload.service.dto.TagRequestDTO;
+import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
+import com.oracle.qa.dataload.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,14 +24,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import com.oracle.qa.dataload.DataLoadApp;
-import com.oracle.qa.dataload.domain.TagRequest;
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.oracle.qa.dataload.domain.enumeration.IdType;
-import com.oracle.qa.dataload.repository.TagRequestRepository;
-import com.oracle.qa.dataload.service.TagRequestService;
-import com.oracle.qa.dataload.service.dto.TagRequestDTO;
-import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
-import com.oracle.qa.dataload.web.rest.errors.ExceptionTranslator;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 /**
  * Test class for the TagRequestResource REST controller.
  *
@@ -73,6 +70,9 @@ public class TagRequestResourceIntTest {
 
     private static final LocalDate DEFAULT_CREATE_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATE_DATE = LocalDate.now(ZoneId.systemDefault());
+
+    private static final Status DEFAULT_STATUS = Status.ACTIVE;
+    private static final Status UPDATED_STATUS = Status.FAIL;
 
     @Autowired
     private TagRequestRepository tagRequestRepository;
@@ -125,7 +125,8 @@ public class TagRequestResourceIntTest {
             .requestCount(DEFAULT_REQUEST_COUNT)
             .file(DEFAULT_FILE)
             .fileContentType(DEFAULT_FILE_CONTENT_TYPE)
-            .createDate(DEFAULT_CREATE_DATE);
+            .createDate(DEFAULT_CREATE_DATE)
+            .status(DEFAULT_STATUS);
         return tagRequest;
     }
 
@@ -159,6 +160,7 @@ public class TagRequestResourceIntTest {
         assertThat(testTagRequest.getFile()).isEqualTo(DEFAULT_FILE);
         assertThat(testTagRequest.getFileContentType()).isEqualTo(DEFAULT_FILE_CONTENT_TYPE);
         assertThat(testTagRequest.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(testTagRequest.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -257,7 +259,8 @@ public class TagRequestResourceIntTest {
             .andExpect(jsonPath("$.[*].requestCount").value(hasItem(DEFAULT_REQUEST_COUNT)))
             .andExpect(jsonPath("$.[*].fileContentType").value(hasItem(DEFAULT_FILE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].file").value(hasItem(Base64Utils.encodeToString(DEFAULT_FILE))))
-            .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
+            .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
 
     @Test
@@ -279,7 +282,8 @@ public class TagRequestResourceIntTest {
             .andExpect(jsonPath("$.requestCount").value(DEFAULT_REQUEST_COUNT))
             .andExpect(jsonPath("$.fileContentType").value(DEFAULT_FILE_CONTENT_TYPE))
             .andExpect(jsonPath("$.file").value(Base64Utils.encodeToString(DEFAULT_FILE)))
-            .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+            .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -308,7 +312,8 @@ public class TagRequestResourceIntTest {
             .requestCount(UPDATED_REQUEST_COUNT)
             .file(UPDATED_FILE)
             .fileContentType(UPDATED_FILE_CONTENT_TYPE)
-            .createDate(UPDATED_CREATE_DATE);
+            .createDate(UPDATED_CREATE_DATE)
+            .status(UPDATED_STATUS);
         TagRequestDTO tagRequestDTO = tagRequestMapper.toDto(updatedTagRequest);
 
         restTagRequestMockMvc.perform(put("/api/tag-requests")
@@ -329,6 +334,7 @@ public class TagRequestResourceIntTest {
         assertThat(testTagRequest.getFile()).isEqualTo(UPDATED_FILE);
         assertThat(testTagRequest.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
         assertThat(testTagRequest.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
+        assertThat(testTagRequest.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

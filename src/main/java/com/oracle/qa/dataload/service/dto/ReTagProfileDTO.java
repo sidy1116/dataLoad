@@ -1,12 +1,12 @@
 package com.oracle.qa.dataload.service.dto;
 
 
-import java.io.Serializable;
 import java.time.LocalDate;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Lob;
-import javax.validation.constraints.NotNull;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 
 /**
  * A DTO for the ReTagProfile entity.
@@ -32,6 +32,10 @@ public class ReTagProfileDTO implements Serializable {
     private Integer startFromLine;
 
     private Integer toLine;
+
+    private Integer reTagCount;
+
+    private Status status;
 
     public Long getId() {
         return id;
@@ -105,6 +109,22 @@ public class ReTagProfileDTO implements Serializable {
         this.toLine = toLine;
     }
 
+    public Integer getReTagCount() {
+        return reTagCount;
+    }
+
+    public void setReTagCount(Integer reTagCount) {
+        this.reTagCount = reTagCount;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -137,6 +157,8 @@ public class ReTagProfileDTO implements Serializable {
             ", createDate='" + getCreateDate() + "'" +
             ", startFromLine='" + getStartFromLine() + "'" +
             ", toLine='" + getToLine() + "'" +
+            ", reTagCount='" + getReTagCount() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

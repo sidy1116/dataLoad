@@ -1,14 +1,13 @@
 package com.oracle.qa.dataload.service.dto;
 
 
-import java.io.Serializable;
 import java.time.LocalDate;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Lob;
-import javax.validation.constraints.NotNull;
-
 import com.oracle.qa.dataload.domain.enumeration.IdType;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 
 /**
  * A DTO for the TagRequest entity.
@@ -37,6 +36,8 @@ public class TagRequestDTO implements Serializable {
     private String fileContentType;
 
     private LocalDate createDate;
+
+    private Status status;
 
     public Long getId() {
         return id;
@@ -118,6 +119,14 @@ public class TagRequestDTO implements Serializable {
         this.createDate = createDate;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -151,6 +160,7 @@ public class TagRequestDTO implements Serializable {
             ", requestCount='" + getRequestCount() + "'" +
             ", file='" + getFile() + "'" +
             ", createDate='" + getCreateDate() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

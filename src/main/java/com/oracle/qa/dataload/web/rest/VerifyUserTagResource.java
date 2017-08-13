@@ -85,11 +85,12 @@ public class VerifyUserTagResource {
 		 int to=verifyUserTagDTO.getToLine();
 		 
 		 if(from==1)from=0;
-		 
+		 VerifyBkuidTask getCookieTask = new VerifyBkuidTask(inputFile[0], "siddchou", "JmwOBmjHMG23",verifyUserTagDTO.getCategoryId(),null);
+		 String cookie=getCookieTask.getLoginCookie();
 		 
 		 for(int i=from;i<to;i++){
 			 String verifybkuid=inputFile[i];				
-			 VerifyBkuidTask verifyBkuidTask = new VerifyBkuidTask(verifybkuid, "siddchou", "JmwOBmjHMG23",verifyUserTagDTO.getCategoryId());
+			 VerifyBkuidTask verifyBkuidTask = new VerifyBkuidTask(verifybkuid, "siddchou", "JmwOBmjHMG23",verifyUserTagDTO.getCategoryId(),cookie);
 			 verifyBkuidTaskList.add(verifyBkuidTask);
 		 }
 

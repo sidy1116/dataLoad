@@ -10,6 +10,7 @@ import { ResponseWrapper, createRequestOption } from '../../shared';
 export class TagRequestService {
 
     private resourceUrl = 'api/tag-requests';
+    private resourceFileUrl = 'api/tag-requests-file';
 
     constructor(private http: Http, private dateUtils: DateUtils) { }
 
@@ -33,6 +34,14 @@ export class TagRequestService {
 
     find(id: number): Observable<TagRequest> {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            this.convertItemFromServer(jsonResponse);
+            return jsonResponse;
+        });
+    }
+    
+    findFile(id: number): Observable<TagRequest> {
+        return this.http.get(`${this.resourceFileUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             this.convertItemFromServer(jsonResponse);
             return jsonResponse;

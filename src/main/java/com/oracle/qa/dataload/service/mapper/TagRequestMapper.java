@@ -1,9 +1,9 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import org.mapstruct.Mapper;
-
-import com.oracle.qa.dataload.domain.TagRequest;
+import com.oracle.qa.dataload.domain.*;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
+
+import org.mapstruct.*;
 
 /**
  * Mapper for the entity TagRequest and its DTO TagRequestDTO.
@@ -20,4 +20,6 @@ public interface TagRequestMapper extends EntityMapper <TagRequestDTO, TagReques
         tagRequest.setId(id);
         return tagRequest;
     }
+    @Mapping( target = "file", ignore = true )
+    public TagRequestDTO toDto(TagRequest entity);
 }

@@ -1,9 +1,9 @@
 package com.oracle.qa.dataload.service.mapper;
 
-import org.mapstruct.Mapper;
-
-import com.oracle.qa.dataload.domain.ReTagProfile;
+import com.oracle.qa.dataload.domain.*;
 import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
+
+import org.mapstruct.*;
 
 /**
  * Mapper for the entity ReTagProfile and its DTO ReTagProfileDTO.
@@ -20,4 +20,7 @@ public interface ReTagProfileMapper extends EntityMapper <ReTagProfileDTO, ReTag
         reTagProfile.setId(id);
         return reTagProfile;
     }
+    
+    @Mapping( target = "inputFile", ignore = true )
+    public ReTagProfileDTO toDto(ReTagProfile entity);
 }

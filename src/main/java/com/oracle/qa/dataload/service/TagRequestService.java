@@ -1,16 +1,15 @@
 package com.oracle.qa.dataload.service;
 
+import com.oracle.qa.dataload.domain.TagRequest;
+import com.oracle.qa.dataload.repository.TagRequestRepository;
+import com.oracle.qa.dataload.service.dto.TagRequestDTO;
+import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.oracle.qa.dataload.domain.TagRequest;
-import com.oracle.qa.dataload.repository.TagRequestRepository;
-import com.oracle.qa.dataload.service.dto.TagRequestDTO;
-import com.oracle.qa.dataload.service.mapper.TagRequestMapper;
 
 
 /**
@@ -53,7 +52,8 @@ public class TagRequestService {
     @Transactional(readOnly = true)
     public Page<TagRequestDTO> findAll(Pageable pageable) {
         log.debug("Request to get all TagRequests");
-        return tagRequestRepository.findAll(pageable)
+        Page<TagRequest> data=tagRequestRepository.findAll(pageable);
+        return data
             .map(tagRequestMapper::toDto);
     }
 
@@ -68,6 +68,15 @@ public class TagRequestService {
         log.debug("Request to get TagRequest : {}", id);
         TagRequest tagRequest = tagRequestRepository.findOne(id);
         return tagRequestMapper.toDto(tagRequest);
+    }
+    
+    @Transactional(readOnly = true)
+    public TagRequestDTO findTagRequestFile(Long id) {
+        log.debug("Request to get TagRequest : {}", id);
+        TagRequest tagRequest = tagRequestRepository.findOne(id);
+        TagRequestDTO dto=tagRequestMapper.toDto(tagRequest);
+        dto.setFile(tagRequest.getFile());
+        return dto;
     }
 
     /**

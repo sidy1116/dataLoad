@@ -12,11 +12,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.oracle.qa.dataload.domain.RadsInventory;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 import com.oracle.qa.dataload.service.RadsInventoryService;
 import com.oracle.qa.dataload.service.ReTagProfileService;
 import com.oracle.qa.dataload.service.TagRequestService;
@@ -24,6 +26,7 @@ import com.oracle.qa.dataload.service.VerifyUserTagService;
 import com.oracle.qa.dataload.service.async.tasks.RadsInventoryCallTask;
 import com.oracle.qa.dataload.service.async.tasks.TagCallBomber;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
+import com.oracle.qa.dataload.service.async.tasks.VerifyBkuidBomber;
 import com.oracle.qa.dataload.service.async.tasks.VerifyBkuidTask;
 import com.oracle.qa.dataload.service.dto.RadsInventoryDTO;
 import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
@@ -49,6 +52,14 @@ public class Runner {
 
 	@Autowired
 	private TagCallBomber tagCallBomber;
+	
+	@Autowired VerifyBkuidBomber verifyBkuidBomber;
+	
+	@Value("${batch.tagrequest}")    
+	int batchsize;
+	
+	@Value("${batch.sleeptime}")    
+	int sleeptime;
 
 	@Async
 	public void useCompletableFutureWithExecutor(List<TagCallTask> tasks, TagRequestDTO tagRequestDTO)
@@ -86,20 +97,21 @@ public class Runner {
 	@Async
 	public synchronized void  tagCallwithCompletableFuture(Integer count, TagCallTask tagCallTask, TagRequestDTO tagRequestDTO)
 			throws IOException {
+		System.out.println("batchSize==>  "+batchsize);
 		long start = System.nanoTime();
 
 		CompletableFuture<String> task = null;
 		List<String> completeResult = new ArrayList<String>();
 
-		int buckets = count / 10000 + 1;
+		int buckets = count / batchsize + 1;
 		for(int j=0;j<buckets;j++){
 			List<CompletableFuture<String>> pendingTasks = new ArrayList<>();
 			int loopCount = 0;
-			if (count < 10000)
+			if (count < batchsize)
 				loopCount = count;
 			else {
-				loopCount = 10000;
-				count = count - 10000;
+				loopCount = batchsize;
+				count = count - batchsize;
 			}
 
 			for (int i = 0; i < loopCount; i++) {
@@ -113,9 +125,9 @@ public class Runner {
 
 			try {
 				if((j+1)!=buckets){
-					System.out.println("Sleeping for 10 seconds");
+					System.out.println("Sleeping for"+ sleeptime/1000+" seconds");
 
-					Thread.sleep(10000);
+					Thread.sleep(sleeptime);
 					System.out.println("Waking up for bucketCounter " +j);
 				}
 				
@@ -141,8 +153,7 @@ public class Runner {
 		} finally {
 			tagRequestDTO.setFile(btOs.toByteArray());
 			tagRequestDTO.setFileContentType("text/plain");
-
-			// validation if present is not present then dont reinset it
+			tagRequestDTO.setStatus(Status.SUCCESS);
 
 			// update to bkuuid actually created
 			tagRequestService.save(tagRequestDTO);
@@ -151,7 +162,7 @@ public class Runner {
 	}
 
 	@Async
-	public synchronized void reTagWithCompletableFutureExecutor(List<TagCallTask> tasks, ReTagProfileDTO tagRequestDTO)
+	public synchronized void reTagWithCompletableFutureExecutor(List<TagCallTask> tasks, ReTagProfileDTO reTagProfileDTO)
 			throws IOException {
 		long start = System.nanoTime();
 		CompletableFuture<String> task = null;
@@ -165,14 +176,14 @@ public class Runner {
 				TagCallTask t=tasks.get(j);
 				task = CompletableFuture.supplyAsync(() -> tagCallBomber.makeTagCalls(t), taskExecutor);
 				pendingTasks.add(task);
-			if(j%10000==0 && j!=0){
+			if(j%batchsize==0 && j!=0){
 				List<String> result = pendingTasks.stream().map(CompletableFuture::join).collect(Collectors.toList());
 
 				completeResult.addAll(result);
 				pendingTasks= new ArrayList<>();
-				System.out.println("Sleeping for 10 seconds");
+				System.out.println("Sleeping for"+ sleeptime/1000+" seconds");
 
-				Thread.sleep(10000);
+				Thread.sleep(sleeptime);
 				System.out.println("Waking up for bucketCounter " +j);
 			}
 			
@@ -190,6 +201,9 @@ public class Runner {
 
 		long duration = (System.nanoTime() - start) / 1_000_000;
 		System.out.printf("Processed %d tasks in %d millis\n", completeResult.size(), duration);
+		reTagProfileDTO.setReTagCount(completeResult.size());
+		reTagProfileDTO.setStatus(Status.SUCCESS);
+		reTagProfileService.save(reTagProfileDTO);
 
 
 	}
@@ -197,21 +211,50 @@ public class Runner {
 	@Async
 	public void useVerifyBkuidTaskCompletableFutureWithExecutor(List<VerifyBkuidTask> tasks,
 			VerifyUserTagDTO verifyUserTagDTO) throws IOException {
+		
 		long start = System.nanoTime();
+		CompletableFuture<String> task = null;
+		List<String> completeResult = new ArrayList<String>();
+		int count=tasks.size();
+		
+		List<CompletableFuture<String>> pendingTasks = new ArrayList<>();
+		for(int j=0;j<count;j++){
+			try{
+				
+				VerifyBkuidTask t=tasks.get(j);
+				task = CompletableFuture.supplyAsync(() -> verifyBkuidBomber.verifyBkuid(t), taskExecutor);
+				pendingTasks.add(task);
+			if(j%batchsize==0 && j!=0){
+				List<String> result = pendingTasks.stream().map(CompletableFuture::join).collect(Collectors.toList());
 
-		List<CompletableFuture<String>> futures = tasks.stream()
-				.map(t -> CompletableFuture.supplyAsync(() -> t.verifyBkuid(), taskExecutor))
-				.collect(Collectors.toList());
+				completeResult.addAll(result);
+				pendingTasks= new ArrayList<>();
+				System.out.println("Sleeping for"+ sleeptime/1000+" seconds");
 
-		List<String> result = futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+				Thread.sleep(sleeptime);
+				System.out.println("Waking up for bucketCounter " +j);
+			}
+			
+			if(j==(count-1)){
+				List<String> result = pendingTasks.stream().map(CompletableFuture::join).collect(Collectors.toList());
+				completeResult.addAll(result);
+				pendingTasks=null;
+			}
+				
+
+			} catch (InterruptedException e) {
+				System.out.println("InterruptedException");
+			}
+		}
 		long duration = (System.nanoTime() - start) / 1_000_000;
-		System.out.printf("Processed %d tasks in %d millis\n", tasks.size(), duration);
-
+		System.out.printf("Processed %d tasks in %d millis\n", completeResult.size(), duration);
 		ByteArrayOutputStream btOs = new ByteArrayOutputStream();
 		String nl = System.getProperty("line.separator");
+		
 		try {
 
-			for (String bkuid : result) {
+		
+			for (String bkuid : completeResult) {
 				btOs.write(bkuid.getBytes());
 				btOs.write(nl.getBytes());
 			}

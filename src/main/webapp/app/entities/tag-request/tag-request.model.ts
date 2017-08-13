@@ -9,6 +9,13 @@ const enum IdType {
     'p_id_s'
 
 };
+
+const enum Status {
+    'ACTIVE',
+    'FAIL',
+    'SUCCESS'
+
+};
 export class TagRequest {
     constructor(
         public id?: number,
@@ -20,6 +27,7 @@ export class TagRequest {
         public requestCount?: number,
         public file?: any,
         public createDate?: any,
+        public status?: Status,
     ) {
     }
 }

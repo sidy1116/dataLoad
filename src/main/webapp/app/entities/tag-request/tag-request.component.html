@@ -26,13 +26,14 @@
             <th jhiSortBy="requestCount"><span>Request Count</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="file"><span>File</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
+            
             <th></th>
             </tr>
             </thead>
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let tagRequest of tagRequests ;trackBy: trackId">
                 <td><a [routerLink]="['../tag-request', tagRequest.id ]">{{tagRequest.id}}</a></td>
-                  <td><div *ngIf="tagRequest.file; else fail" class="fa fa-check fa-2x text-success font-weight-bold" style="" aria-hidden="true">
+                  <td><div *ngIf="tagRequest.status == 'SUCCESS'; else fail" class="fa fa-check fa-2x text-success font-weight-bold" style="" aria-hidden="true">
                   </div>
                  <ng-template #fail>
                  	<div *ngIf="dateDiff(tagRequest.createDate) > 1 ; else inprogress" class="fa fa-exclamation-circle fa-2x  text-danger font-weight-bold" style="">
@@ -65,10 +66,11 @@
                 <td>{{tagRequest.idType}}</td>
                 <td>{{tagRequest.requestCount}}</td>
                 <td>
-                    <a *ngIf="tagRequest.file" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file, tagRequest.id )" class="fa fa-download fa-2x"  ></a>
+                    <a *ngIf="tagRequest.status == 'SUCCESS'" (click)="downloadFile(tagRequest.fileContentType, tagRequest.file, tagRequest.id )" class="fa fa-download fa-2x"  ></a>
                    
                 </td>
                 <td>{{tagRequest.createDate | date:'mediumDate'}}</td>
+                
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
@@ -87,7 +89,7 @@
                         </button>
                          -->
                          
-                        <button  *ngIf="tagRequest.file; else failDelete" type="submit"
+                        <button  *ngIf="tagRequest.status == 'SUCCESS'; else failDelete" type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'tag-request/'+ tagRequest.id + '/delete'} }]"
                                 replaceUrl="true"
                                 class="btn btn-danger btn-sm">

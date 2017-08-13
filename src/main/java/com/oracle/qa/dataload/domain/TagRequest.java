@@ -1,24 +1,17 @@
 package com.oracle.qa.dataload.domain;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.oracle.qa.dataload.domain.enumeration.IdType;
+
+import com.oracle.qa.dataload.domain.enumeration.Status;
 
 /**
  * A TagRequest.
@@ -29,8 +22,24 @@ import com.oracle.qa.dataload.domain.enumeration.IdType;
 public class TagRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public TagRequest(){
+    	
+    }
+    public TagRequest(Long id, Integer siteId, String phints, String referelUrl, String headers, IdType idType,
+			Integer requestCount, LocalDate createDate, Status status) {
+		super();
+		this.id = id;
+		this.siteId = siteId;
+		this.phints = phints;
+		this.referelUrl = referelUrl;
+		this.headers = headers;
+		this.idType = idType;
+		this.requestCount = requestCount;
+		this.createDate = createDate;
+		this.status = status;
+	}
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -65,6 +74,10 @@ public class TagRequest implements Serializable {
 
     @Column(name = "create_date")
     private LocalDate createDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     public Long getId() {
         return id;
@@ -191,6 +204,19 @@ public class TagRequest implements Serializable {
         this.createDate = createDate;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public TagRequest status(Status status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -224,6 +250,7 @@ public class TagRequest implements Serializable {
             ", file='" + getFile() + "'" +
             ", fileContentType='" + fileContentType + "'" +
             ", createDate='" + getCreateDate() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

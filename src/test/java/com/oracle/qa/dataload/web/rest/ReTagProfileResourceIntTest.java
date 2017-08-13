@@ -1,20 +1,13 @@
 package com.oracle.qa.dataload.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.oracle.qa.dataload.DataLoadApp;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import javax.persistence.EntityManager;
+import com.oracle.qa.dataload.domain.ReTagProfile;
+import com.oracle.qa.dataload.repository.ReTagProfileRepository;
+import com.oracle.qa.dataload.service.ReTagProfileService;
+import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
+import com.oracle.qa.dataload.service.mapper.ReTagProfileMapper;
+import com.oracle.qa.dataload.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,14 +24,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import com.oracle.qa.dataload.DataLoadApp;
-import com.oracle.qa.dataload.domain.ReTagProfile;
-import com.oracle.qa.dataload.repository.ReTagProfileRepository;
-import com.oracle.qa.dataload.service.ReTagProfileService;
-import com.oracle.qa.dataload.service.dto.ReTagProfileDTO;
-import com.oracle.qa.dataload.service.mapper.ReTagProfileMapper;
-import com.oracle.qa.dataload.web.rest.errors.ExceptionTranslator;
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.oracle.qa.dataload.domain.enumeration.Status;
 /**
  * Test class for the ReTagProfileResource REST controller.
  *
@@ -70,6 +66,12 @@ public class ReTagProfileResourceIntTest {
 
     private static final Integer DEFAULT_TO_LINE = 1;
     private static final Integer UPDATED_TO_LINE = 2;
+
+    private static final Integer DEFAULT_RE_TAG_COUNT = 1;
+    private static final Integer UPDATED_RE_TAG_COUNT = 2;
+
+    private static final Status DEFAULT_STATUS = Status.ACTIVE;
+    private static final Status UPDATED_STATUS = Status.FAIL;
 
     @Autowired
     private ReTagProfileRepository reTagProfileRepository;
@@ -121,7 +123,9 @@ public class ReTagProfileResourceIntTest {
             .headers(DEFAULT_HEADERS)
             .createDate(DEFAULT_CREATE_DATE)
             .startFromLine(DEFAULT_START_FROM_LINE)
-            .toLine(DEFAULT_TO_LINE);
+            .toLine(DEFAULT_TO_LINE)
+            .reTagCount(DEFAULT_RE_TAG_COUNT)
+            .status(DEFAULT_STATUS);
         return reTagProfile;
     }
 
@@ -154,6 +158,8 @@ public class ReTagProfileResourceIntTest {
         assertThat(testReTagProfile.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(testReTagProfile.getStartFromLine()).isEqualTo(DEFAULT_START_FROM_LINE);
         assertThat(testReTagProfile.getToLine()).isEqualTo(DEFAULT_TO_LINE);
+        assertThat(testReTagProfile.getReTagCount()).isEqualTo(DEFAULT_RE_TAG_COUNT);
+        assertThat(testReTagProfile.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -232,7 +238,9 @@ public class ReTagProfileResourceIntTest {
             .andExpect(jsonPath("$.[*].headers").value(hasItem(DEFAULT_HEADERS.toString())))
             .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())))
             .andExpect(jsonPath("$.[*].startFromLine").value(hasItem(DEFAULT_START_FROM_LINE)))
-            .andExpect(jsonPath("$.[*].toLine").value(hasItem(DEFAULT_TO_LINE)));
+            .andExpect(jsonPath("$.[*].toLine").value(hasItem(DEFAULT_TO_LINE)))
+            .andExpect(jsonPath("$.[*].reTagCount").value(hasItem(DEFAULT_RE_TAG_COUNT)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
 
     @Test
@@ -253,7 +261,9 @@ public class ReTagProfileResourceIntTest {
             .andExpect(jsonPath("$.headers").value(DEFAULT_HEADERS.toString()))
             .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()))
             .andExpect(jsonPath("$.startFromLine").value(DEFAULT_START_FROM_LINE))
-            .andExpect(jsonPath("$.toLine").value(DEFAULT_TO_LINE));
+            .andExpect(jsonPath("$.toLine").value(DEFAULT_TO_LINE))
+            .andExpect(jsonPath("$.reTagCount").value(DEFAULT_RE_TAG_COUNT))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -281,7 +291,9 @@ public class ReTagProfileResourceIntTest {
             .headers(UPDATED_HEADERS)
             .createDate(UPDATED_CREATE_DATE)
             .startFromLine(UPDATED_START_FROM_LINE)
-            .toLine(UPDATED_TO_LINE);
+            .toLine(UPDATED_TO_LINE)
+            .reTagCount(UPDATED_RE_TAG_COUNT)
+            .status(UPDATED_STATUS);
         ReTagProfileDTO reTagProfileDTO = reTagProfileMapper.toDto(updatedReTagProfile);
 
         restReTagProfileMockMvc.perform(put("/api/re-tag-profiles")
@@ -301,6 +313,8 @@ public class ReTagProfileResourceIntTest {
         assertThat(testReTagProfile.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
         assertThat(testReTagProfile.getStartFromLine()).isEqualTo(UPDATED_START_FROM_LINE);
         assertThat(testReTagProfile.getToLine()).isEqualTo(UPDATED_TO_LINE);
+        assertThat(testReTagProfile.getReTagCount()).isEqualTo(UPDATED_RE_TAG_COUNT);
+        assertThat(testReTagProfile.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

@@ -1,20 +1,15 @@
 package com.oracle.qa.dataload.domain;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 
 /**
  * A ReTagProfile.
@@ -25,8 +20,27 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class ReTagProfile implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public ReTagProfile(){
+    	
+    }
+    
 
-    @Id
+    public ReTagProfile(Long id, Integer siteId, String phint, String headers, LocalDate createDate,
+			Integer startFromLine, Integer toLine, Integer reTagCount, Status status) {
+		super();
+		this.id = id;
+		this.siteId = siteId;
+		this.phint = phint;
+		this.headers = headers;
+		this.createDate = createDate;
+		this.startFromLine = startFromLine;
+		this.toLine = toLine;
+		this.reTagCount = reTagCount;
+		this.status = status;
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -56,6 +70,13 @@ public class ReTagProfile implements Serializable {
 
     @Column(name = "to_line")
     private Integer toLine;
+
+    @Column(name = "re_tag_count")
+    private Integer reTagCount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     public Long getId() {
         return id;
@@ -169,6 +190,32 @@ public class ReTagProfile implements Serializable {
         this.toLine = toLine;
     }
 
+    public Integer getReTagCount() {
+        return reTagCount;
+    }
+
+    public ReTagProfile reTagCount(Integer reTagCount) {
+        this.reTagCount = reTagCount;
+        return this;
+    }
+
+    public void setReTagCount(Integer reTagCount) {
+        this.reTagCount = reTagCount;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public ReTagProfile status(Status status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -201,6 +248,8 @@ public class ReTagProfile implements Serializable {
             ", createDate='" + getCreateDate() + "'" +
             ", startFromLine='" + getStartFromLine() + "'" +
             ", toLine='" + getToLine() + "'" +
+            ", reTagCount='" + getReTagCount() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

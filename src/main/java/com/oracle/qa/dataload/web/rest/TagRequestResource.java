@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.oracle.qa.dataload.domain.enumeration.Status;
 import com.oracle.qa.dataload.service.TagRequestService;
 import com.oracle.qa.dataload.service.async.tasks.TagCallTask;
 import com.oracle.qa.dataload.service.dto.TagRequestDTO;
@@ -77,6 +78,7 @@ public class TagRequestResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tagRequest cannot already have an ID")).body(null);
         }
         tagRequestDTO.setCreateDate(LocalDate.now());
+        tagRequestDTO.setStatus(Status.ACTIVE);
         TagRequestDTO result = tagRequestService.save(tagRequestDTO);
         /**
          * code for Aysnc
@@ -162,6 +164,20 @@ public class TagRequestResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tagRequestDTO));
     }
 
+    
+    /**
+     * GET  /tag-requests/:id : get the "id" tagRequest.
+     *
+     * @param id the id of the tagRequestDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the tagRequestDTO, or with status 404 (Not Found)
+     */
+    @GetMapping("/tag-requests-file/{id}")
+    @Timed
+    public ResponseEntity<TagRequestDTO> getFileTagRequest(@PathVariable Long id) {
+        log.debug("REST request to get TagRequest : {}", id);
+        TagRequestDTO tagRequestDTO = tagRequestService.findTagRequestFile(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tagRequestDTO));
+    }
     /**
      * DELETE  /tag-requests/:id : delete the "id" tagRequest.
      *

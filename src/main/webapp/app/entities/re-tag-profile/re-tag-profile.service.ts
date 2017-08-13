@@ -10,7 +10,8 @@ import { ResponseWrapper, createRequestOption } from '../../shared';
 export class ReTagProfileService {
 
     private resourceUrl = 'api/re-tag-profiles';
-
+    private resourceFileUrl = 'api/re-tag-profiles-file';
+    
     constructor(private http: Http, private dateUtils: DateUtils) { }
 
     create(reTagProfile: ReTagProfile): Observable<ReTagProfile> {
@@ -39,6 +40,14 @@ export class ReTagProfileService {
         });
     }
 
+    findFile(id: number): Observable<ReTagProfile> {
+        return this.http.get(`${this.resourceFileUrl}/${id}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            this.convertItemFromServer(jsonResponse);
+            return jsonResponse;
+        });
+    }
+    
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceUrl, options)

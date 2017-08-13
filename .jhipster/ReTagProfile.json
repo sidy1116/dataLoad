@@ -36,6 +36,15 @@
         {
             "fieldName": "toLine",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "reTagCount",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Status",
+            "fieldValues": "ACTIVE,FAIL,SUCCESS"
         }
     ],
     "changelogDate": "20170612210248",

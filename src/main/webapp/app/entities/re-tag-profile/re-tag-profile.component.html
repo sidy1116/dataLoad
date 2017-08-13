@@ -21,10 +21,11 @@
             <th jhiSortBy="inputFile"><span>Input File</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="phint"><span>Phint</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="headers"><span>Headers</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="startFromLine"><span>Start From Line</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="toLine"><span>To Line</span> <span class="fa fa-sort"></span></th>
-             <th jhiSortBy="createDate"><span>Create Date</span> <span class="fa fa-sort"></span></th>
-            
+            <th jhiSortBy="reTagCount"><span>Re Tag Count</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="status"><span>Status</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
             </thead>
@@ -33,15 +34,15 @@
                 <td><a [routerLink]="['../re-tag-profile', reTagProfile.id ]">{{reTagProfile.id}}</a></td>
                 <td>{{reTagProfile.siteId}}</td>
                 <td>
-                    <a *ngIf="reTagProfile.inputFile" (click)="openFile(reTagProfile.inputFileContentType, reTagProfile.inputFile)">open</a>
-                    <span *ngIf="reTagProfile.inputFile">{{reTagProfile.inputFileContentType}}, {{byteSize(reTagProfile.inputFile)}}</span>
-                </td>
+                   <a *ngIf="reTagProfile.status == 'SUCCESS'" (click)="downloadFile(reTagProfile.fileContentType, reTagProfile.file, reTagProfile.id )" class="fa fa-download fa-2x"  ></a>
+				</td>
                 <td>{{reTagProfile.phint}}</td>
                 <td>{{reTagProfile.headers}}</td>
+                <td>{{reTagProfile.createDate | date:'mediumDate'}}</td>
                 <td>{{reTagProfile.startFromLine}}</td>
                 <td>{{reTagProfile.toLine}}</td>
-                <td>{{reTagProfile.createDate | date:'mediumDate'}}</td>
-                
+                <td>{{reTagProfile.reTagCount}}</td>
+                <td>{{reTagProfile.status}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

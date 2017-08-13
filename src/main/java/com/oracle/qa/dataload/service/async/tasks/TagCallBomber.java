@@ -115,17 +115,37 @@ public class TagCallBomber {
 		}
 		try{
 			
-		
+		String bku=null;
+
 		HttpEntity<?> entity = new HttpEntity<>(headers2);
 		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).encode().toUri(),
 				HttpMethod.GET, entity, String.class);
 		if (HttpStatus.OK == response.getStatusCode()) {
 			System.out.println(AsyncUtil.getThreadName());
 
-			if(tagCallTask.getIdType().equals(IdType.bkuuid))
-			bkuid = response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "");
+			if(tagCallTask.getIdType().equals(IdType.bkuuid)){
+				for(String values:response.getHeaders().getValuesAsList("Set-Cookie")){
+					if(values.contains("bku=") && (values.indexOf(";", values.indexOf("bku=")-values.indexOf("bku="))>15)){
+						bku=	values.substring(values.indexOf("bku="), values.indexOf(";", values.indexOf("bku=")));
+						bku=bku.substring(bku.indexOf("=")+1);
+					}
+				}
+				
+
+				bkuid = bku;
+
+			}
 			else{
-				bkuid =	response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "") +"  ||  "+returnID;
+				for(String values:response.getHeaders().getValuesAsList("Set-Cookie")){
+					if(values.contains("bku=") && (values.indexOf(";", values.indexOf("bku=")-values.indexOf("bku="))>15)){
+						bku=values.substring(values.indexOf("bku="), values.indexOf(";", values.indexOf("bku=")));
+						bku=bku.substring(bku.indexOf("=")+1);
+					}
+				}
+
+
+				//bkuid =	response.getHeaders().get("Set-Cookie").get(0).split(";")[0].replaceAll("bku=", "") +"  ||  "+returnID;
+				bkuid=bku+"  ||  "+returnID;
 			}
 		} else {
 			bkuid = "BKU NOT FOUND";

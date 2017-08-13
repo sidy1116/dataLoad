@@ -3,9 +3,14 @@ package com.oracle.qa.dataload.service.async.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,6 +33,7 @@ public class VerifyBkuidTask {
 	private String prefix=">";
 	private String postfix="&nbsp;<";		
 	
+	private String cookie;
 	public String getCategoryID() {
 		return categoryID;
 	}
@@ -40,12 +46,14 @@ public class VerifyBkuidTask {
 
 
 
-	public VerifyBkuidTask(String bkuid, String id, String password, String categoryID) {
+	public VerifyBkuidTask(String bkuid, String id, String password, String categoryID, String cookie) {
 		super();
 		this.bkuid = bkuid;
 		this.id = id;
 		this.password = password;
 		this.categoryID = categoryID;
+		this.cookie=cookie;
+
 	}
 
 
@@ -59,7 +67,7 @@ public class VerifyBkuidTask {
 	}
 
 
-	public String verifyBkuid(){
+	public String getLoginCookie(){
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 		
@@ -68,10 +76,7 @@ public class VerifyBkuidTask {
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
-		CloseableHttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy())
-				//.setProxy(new HttpHost("www-proxy.us.oracle.com", 80))
-
-				.build();
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		factory.setHttpClient(httpClient);
 		RestTemplate restemplate2 = new RestTemplate(factory);
 		HttpHeaders headers = new HttpHeaders();
@@ -84,20 +89,21 @@ public class VerifyBkuidTask {
 		HttpEntity<?> entity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 		ResponseEntity<String> response = restemplate2.exchange(builder.buildAndExpand(uriParams).encode().toUri(),
 				HttpMethod.POST, entity, String.class);
-		if (HttpStatus.OK == response.getStatusCode()) {
-			
-			System.out.println("RESPONSE==>"+ response.getBody());
-			if(response.getBody().contains(prefix+categoryID+postfix)){
-				return bkuid +"  || VERIFIED";
-			}
-			
-			
-			return bkuid +"NOT VERIFIED" ;
-		}else return "NOT VERIFIED";
-		
-		
+		String cookie= response.getHeaders().getFirst("Set-Cookie");
+		return cookie;
 		
 		
 	}
+	
+	public String getCookie() {
+		return cookie;
+	}
+
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+
+
 	
 }

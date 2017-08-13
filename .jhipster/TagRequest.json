@@ -44,6 +44,11 @@
         {
             "fieldName": "createDate",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Status",
+            "fieldValues": "ACTIVE,FAIL,SUCCESS"
         }
     ],
     "changelogDate": "20170612135939",

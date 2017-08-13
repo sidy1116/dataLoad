@@ -88,7 +88,7 @@ server:
 jhipster:
     async:
         core-pool-size: 1000
-        max-pool-size: 5000
+        max-pool-size: 6000
         queue-capacity: 1000001
     # By default CORS is disabled. Uncomment to enable.
     #cors:
@@ -122,5 +122,9 @@ jhipster:
 # More documentation is available at:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
+
+batch:
+     tagrequest: 10000
+     sleeptime: 5000
 
 application:
